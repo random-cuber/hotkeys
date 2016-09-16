@@ -1,0 +1,11 @@
+.plugin_hotkeys.ui-tabs .ui-tabs-nav {
+	height: 1.6em;
+}
+
+.plugin_hotkeys.ui-tabs .ui-tabs-nav .ui-tabs-anchor {
+	padding: 0.4em;
+}
+
+.plugin_hotkeys.hide_title .ui-dialog-titlebar {
+	display: none
+}

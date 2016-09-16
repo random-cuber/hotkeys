@@ -1,0 +1,5 @@
+
+/* hide text */
+#messagetoolbar a.button.hotkeys {
+    text-indent: -5000px;
+}

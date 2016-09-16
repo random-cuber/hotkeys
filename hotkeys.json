@@ -1,0 +1,472 @@
+[
+    {
+        "profile": "",
+        "context": "",
+        "command": "",
+        "key": "",
+        "script": "",
+        "comment": ""
+    },
+    {
+        "profile": "cor.bosman",
+        "command": "plugin.hotkeys.activate",
+        "context": "any",
+        "comment": "activate hotkeys plugin dialog",
+        "script": "",
+        "key": "shift+/",
+        "source": "external"
+    },
+    {
+        "profile": "windows",
+        "context": "any",
+        "command": "test:windows",
+        "key": "f9",
+        "comment": "windows test",
+        "script": "alert('test');",
+        "source": "undefined"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "plugin.contextmenu_folder.folder_create",
+        "context": "mail_any",
+        "comment": "create sub folder from current mailbox",
+        "script": "",
+        "key": "f7",
+        "source": "external"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "plugin.contextmenu_folder.folder_delete",
+        "context": "mail_any",
+        "comment": "delete currently selected mailbox",
+        "script": "",
+        "key": "f8",
+        "source": "external"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "plugin.contextmenu_folder.folder_locate",
+        "context": "mail_any",
+        "comment": "select mailbox by quick search",
+        "script": "",
+        "key": "f3",
+        "source": "external"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "plugin.contextmenu_folder.folder_rename",
+        "context": "mail_any",
+        "comment": "rename currently selected mailbox",
+        "script": "",
+        "key": "f2",
+        "source": "external"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "plugin.contextmenu_folder.folder_tree_read",
+        "context": "mail_any",
+        "comment": "mark read current mailbox and its descendants",
+        "script": "",
+        "key": "alt+shift+f9",
+        "source": "external"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "plugin.contextmenu.readfolder",
+        "context": "mail_any",
+        "comment": "mailbox: mark as read selected folder",
+        "script": "",
+        "key": "alt+f9",
+        "source": "external"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "reply",
+        "context": "mail_any",
+        "comment": "reply to single address",
+        "script": "",
+        "key": "ctrl+r",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "reply-all",
+        "context": "mail_any",
+        "comment": "reply to multiple addresses",
+        "script": "",
+        "key": "ctrl+shift+r",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "about",
+        "context": "mail_any",
+        "comment": "plugins: show active",
+        "script": "",
+        "key": "alt+shift+a",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "plugin.contextmenu.expandall",
+        "context": "mail_any",
+        "comment": "mailbox: expand all",
+        "script": "rcmail.enable_command(command,true); rcmail.command(command);",
+        "key": "f10",
+        "source": "external"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "plugin.contextmenu.collapseall",
+        "context": "mail_any",
+        "comment": "mailbox: collapse all",
+        "script": "rcmail.enable_command(command,true); rcmail.command(command);",
+        "key": "alt+f10",
+        "source": "external"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "reload",
+        "context": "any",
+        "comment": "reload client from the server",
+        "script": "document.location.reload(true);",
+        "key": "shift+f1",
+        "source": "custom"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "expand-all",
+        "context": "mail_any",
+        "comment": "threads: expand all messages",
+        "script": "",
+        "key": "alt+a",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "expand-unread",
+        "context": "mail_any",
+        "comment": "threads: expand unread messages",
+        "script": "",
+        "key": "alt+u",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "collapse-all",
+        "context": "mail_any",
+        "comment": "threads: collapse all messages",
+        "script": "",
+        "key": "alt+c",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "plugin.markasjunk",
+        "context": "mail_any",
+        "comment": "message: mark selected as junk",
+        "script": "",
+        "key": "ctrl+j",
+        "source": "external"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "#quicksearchbox",
+        "context": "mail_list",
+        "comment": "focus: enter search input",
+        "script": "$(command).focus().select();",
+        "key": "ctrl+f",
+        "source": "custom"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "#quicksearchbox",
+        "context": "quicksearchbox",
+        "comment": "focus: leave search input",
+        "script": "$(command).blur();",
+        "key": "esc",
+        "source": "custom"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "#messagessearchfilter",
+        "context": "messagessearchfilter",
+        "comment": "focus: leave filter select",
+        "script": "$(command).blur();",
+        "key": "esc",
+        "source": "custom"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "#messagessearchfilter",
+        "context": "mail_list",
+        "comment": "focus: enter filter select",
+        "script": "$(command).focus();",
+        "key": "ctrl+s",
+        "source": "custom"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "select-all",
+        "context": "mail_list",
+        "comment": "message: select all in the mailbox",
+        "script": "rcmail.command(command, '');",
+        "key": "ctrl+a",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "select-none",
+        "context": "mail_list",
+        "comment": "message: unselect list",
+        "script": "rcmail.command(command, '');",
+        "key": "esc",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "plugin.contextmenu_folder.show_all",
+        "context": "mail_any",
+        "comment": "folder: show all",
+        "script": "",
+        "key": "alt+1",
+        "source": "external"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "plugin.contextmenu_folder.show_active",
+        "context": "mail_any",
+        "comment": "folder: show active",
+        "script": "",
+        "key": "alt+2",
+        "source": "external"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "plugin.contextmenu_folder.show_favorite",
+        "context": "mail_any",
+        "comment": "folder: show favorite",
+        "script": "",
+        "key": "alt+3",
+        "source": "external"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "plugin.contextmenu_folder.reset_selected",
+        "context": "mail_any",
+        "comment": "folder: reset selected",
+        "script": "",
+        "key": "alt+4",
+        "source": "external"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "plugin.contextmenu_folder.reset_transient",
+        "context": "mail_any",
+        "comment": "folder: reset transient",
+        "script": "",
+        "key": "alt+5",
+        "source": "external"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "plugin.contextmenu_folder.message_copy",
+        "context": "mail_any",
+        "comment": "mesage: copy selected by quick search",
+        "script": "",
+        "key": "f5",
+        "source": "external"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "plugin.contextmenu_folder.message_move",
+        "context": "mail_any",
+        "comment": "mesage: move selected by quick search",
+        "script": "",
+        "key": "f6",
+        "source": "external"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "plugin.contextmenu_folder.contact_folder_create",
+        "context": "mail_any",
+        "comment": "create mailbox from selected message headers",
+        "script": "",
+        "key": "f4",
+        "source": "external"
+    },
+    {
+        "profile": "user",
+        "command": "test",
+        "context": "any",
+        "comment": "user test",
+        "script": "alert(\"test\");",
+        "key": "f3",
+        "source": "custom"
+    },
+    {
+        "profile": "linux",
+        "command": "test",
+        "context": "any",
+        "comment": "linux test",
+        "script": "alert('test');",
+        "key": "f3",
+        "source": "custom"
+    },
+    {
+        "profile": "macosx",
+        "command": "test",
+        "context": "any",
+        "comment": "macosx test",
+        "script": "alert('test');",
+        "key": "f3",
+        "source": "custom"
+    },
+    {
+        "profile": "windows",
+        "command": "test",
+        "context": "any",
+        "comment": "windows test",
+        "script": "alert('test');",
+        "key": "f3"
+    },
+    {
+        "profile": "cor.bosman",
+        "context": "mail_list",
+        "command": "select:all",
+        "key": "shift+a",
+        "script": "rcmail.command('select-all', '');",
+        "comment": "select all messages",
+        "source": "custom"
+    },
+    {
+        "profile": "cor.bosman",
+        "context": "mail_list",
+        "command": "select:page",
+        "key": "a",
+        "script": "rcmail.command('select-all', 'page');",
+        "comment": "select page messages",
+        "source": "custom"
+    },
+    {
+        "profile": "cor.bosman",
+        "context": "mail_list",
+        "command": "collapse-all",
+        "key": "shift+c",
+        "comment": "collapse message threads",
+        "source": "internal"
+    },
+    {
+        "profile": "cor.bosman",
+        "context": "mail_list",
+        "command": "expand-all",
+        "key": "shift+e",
+        "comment": "expand all message threads",
+        "source": "internal"
+    },
+    {
+        "profile": "cor.bosman",
+        "context": "mail_list",
+        "command": "expand-unread",
+        "key": "shift+u",
+        "comment": "expand unread message threads",
+        "source": "internal"
+    },
+    {
+        "profile": "cor.bosman",
+        "context": "mail_list",
+        "command": "reply-all",
+        "key": "shift+r",
+        "comment": "reply to all",
+        "source": "internal"
+    },
+    {
+        "profile": "cor.bosman",
+        "context": "mail_list",
+        "command": "reply",
+        "key": "r",
+        "comment": "reply to one",
+        "source": "internal"
+    },
+    {
+        "profile": "cor.bosman",
+        "command": "compose",
+        "context": "mail_list",
+        "comment": "compose new message",
+        "script": "",
+        "key": "c",
+        "source": "internal"
+    },
+    {
+        "profile": "cor.bosman",
+        "command": "delete",
+        "context": "mail_list",
+        "comment": "delete selected message",
+        "script": "",
+        "key": "d",
+        "source": "internal"
+    },
+    {
+        "profile": "cor.bosman",
+        "command": "forward",
+        "context": "mail_list",
+        "comment": "forward selected message",
+        "script": "",
+        "key": "f",
+        "source": "internal"
+    },
+    {
+        "profile": "cor.bosman",
+        "command": "previouspage",
+        "context": "mail_list",
+        "comment": "go to previous page",
+        "script": "",
+        "key": "j",
+        "source": "internal"
+    },
+    {
+        "profile": "cor.bosman",
+        "command": "nextpage",
+        "context": "mail_list",
+        "comment": "go to following page",
+        "script": "",
+        "key": "k",
+        "source": "internal"
+    },
+    {
+        "profile": "cor.bosman",
+        "command": "print",
+        "context": "mail_list",
+        "comment": "print selected message",
+        "script": "",
+        "key": "p",
+        "source": "internal"
+    },
+    {
+        "profile": "cor.bosman",
+        "command": "forward",
+        "context": "mail_view",
+        "comment": "forward selected message",
+        "script": "",
+        "key": "f",
+        "source": "internal"
+    },
+    {
+        "profile": "cor.bosman",
+        "command": "previousmessage",
+        "context": "mail_view",
+        "comment": "go to previous message",
+        "script": "",
+        "key": "j",
+        "source": "internal"
+    },
+    {
+        "profile": "cor.bosman",
+        "command": "nextmessage",
+        "context": "mail_view",
+        "comment": "go to following message",
+        "script": "",
+        "key": "k",
+        "source": "internal"
+    }
+]
