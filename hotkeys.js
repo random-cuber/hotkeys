@@ -1,3 +1,7 @@
+//
+// Roundcube Hot Keys Plugin
+//
+
 // plugin class
 function plugin_hotkeys() {
 	var self = this;
@@ -39,7 +43,7 @@ function plugin_hotkeys() {
 	// mapping table filters
 	this.filter_list = function() {
 		return [ 'all', 'active', 'passive', 'custom', 'internal', 'external',
-				'undefined' ];
+				'undefined', 'scripted' ];
 	}
 
 	// locate internal jquery event handler
@@ -648,6 +652,16 @@ function plugin_hotkeys() {
 		return id.startsWith('#') ? $(id) : $('[id="' + id + '"]');
 	}
 
+	// jquery dialog title icon
+	this.dialog_icon = function(dialog, name) {
+		dialog.find('span.ui-dialog-title').addClass(
+				'plugin_hotkeys title_icon ' + name);
+	}
+
+	// //
+
+	self.initialize();
+
 }
 
 // script evaluator
@@ -812,7 +826,7 @@ plugin_hotkeys.prototype.html_list = function(args, opts) {
 
 	widget.$choice = function widget_choice() { // source object
 		var id = widget.get_single_selection();
-		return root.entry_list[id];
+		return widget.$entry_list[id];
 	}
 
 	widget.$display = function widget_dislplay() { // show current row
@@ -830,7 +844,7 @@ plugin_hotkeys.prototype.html_list = function(args, opts) {
 	}
 
 	widget.$build = function widget_build(entry_list) {
-		root.entry_list = entry_list;
+		widget.$entry_list = entry_list;
 		widget.clear(true);
 		$.each(entry_list, function(row_id, entry) {
 			var cols = [];
@@ -866,24 +880,26 @@ plugin_hotkeys.prototype.html_menu = function(args) {
 
 	var div = $('<div>').attr({
 		id : args.id,
-		class : 'popupmenu',
+		class : args.class_div || 'popupmenu',
 	}).css({
 		display : 'none',
 	}).data('handler', args.handler);
 
 	var ul = $('<ul>').attr({
-		class : 'toolbarmenu iconized',
+		class : args.class_ul || 'toolbarmenu iconized',
 	}).appendTo(div);
 
 	$.each(args.item_list, function(_, item) {
-		var li = $('<li>').appendTo(ul);
+		var li = $('<li>').attr({
+			class : item.class_li || '',
+		}).appendTo(ul);
 		var a = $('<a>').attr({
 			href : '#',
-			class : args['class'] || 'icon active',
+			class : item.class_a || 'icon active',
 		}).data('id', item.id).appendTo(li);
 		var name = self.localize(item.name || item.id);
 		var span = $('<span>').attr({
-			class : item['class'] || 'icon',
+			class : item.class_span || 'icon',
 		}).text(name).appendTo(a);
 	});
 
@@ -1000,18 +1016,19 @@ plugin_hotkeys.prototype.show_arkon = function(args) {
 	var menu_info = { // TODO css
 		id : 'plugin_hotkeys_arkon_menu',
 		handler : menu_handler,
+		class_div: 'plugin_hotkeys menu_icon popupmenu',
 		item_list : [ {
 			id : 'new',
-			class : 'icon unread',
+			class_span : 'hotkeys-icon-plus',
 		}, {
 			id : 'change',
-			class : 'icon edit',
+			class_span : 'hotkeys-icon-pencil',
 		}, {
 			id : 'remove',
-			class : 'icon cross',
+			class_span : 'hotkeys-icon-minus',
 		}, {
 			id : 'invoke',
-			class : 'icon flagged',
+			class_span : 'hotkeys-icon-rocket',
 		}, ],
 	}
 
@@ -1105,6 +1122,11 @@ plugin_hotkeys.prototype.show_arkon = function(args) {
 		case 'undefined':
 			mapping_widget.$filter('source', function(col) {
 				return col.text() == filter;
+			});
+			break;
+		case 'scripted':
+			mapping_widget.$filter('script', function(col) {
+				return col.text();
 			});
 			break;
 		}
@@ -1219,6 +1241,7 @@ plugin_hotkeys.prototype.show_arkon = function(args) {
 	var options = {
 		width : 'auto',
 		open : function open(event, ui) {
+			self.dialog_icon($(this).parent(), 'hotkeys-icon-keyboard-black');
 			self.has_part_arkon = true;
 			self.apply_binds([ 'profile_unbind' ]);
 			init_tabs();
@@ -1474,6 +1497,7 @@ plugin_hotkeys.prototype.show_changer = function(args) {
 			of : window,
 		},
 		open : function open(event, ui) {
+			self.dialog_icon($(this).parent(), 'hotkeys-icon-pencil');
 			self.has_part_changer = true;
 			render();
 		},
@@ -1635,7 +1659,14 @@ plugin_hotkeys.prototype.show_export = function(args) {
 		}
 	} ];
 
-	var options = {};
+	var options = {
+		open : function open(event, ui) {
+			self.dialog_icon($(this).parent(), 'hotkeys-icon-download');
+		},
+		close : function close(event, ui) {
+			$(this).remove();
+		},
+	};
 
 	self.part_export = rcmail.show_popup_dialog(content, title, buttons,
 			options);
@@ -1783,6 +1814,7 @@ plugin_hotkeys.prototype.show_import = function(args) {
 
 	var options = {
 		open : function open(event, ui) {
+			self.dialog_icon($(this).parent(), 'hotkeys-icon-upload');
 			button_submit(false);
 			if (import_local) {
 				//
@@ -1851,7 +1883,7 @@ plugin_hotkeys.prototype.show_share = function(args) {
 
 	var options = {
 		open : function open(event, ui) {
-			//
+			self.dialog_icon($(this).parent(), 'hotkeys-icon-share');
 		},
 		close : function close(event, ui) {
 			$(this).remove();
@@ -1865,14 +1897,9 @@ plugin_hotkeys.prototype.show_share = function(args) {
 
 }
 
-// plugin singleton
-plugin_hotkeys.instance = null;
-
+// plugin instance
 if (rcmail) {
-
 	rcmail.addEventListener('init', function instance(param) {
 		plugin_hotkeys.instance = new plugin_hotkeys();
-		plugin_hotkeys.instance.initialize();
 	});
-
 }

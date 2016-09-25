@@ -1,0 +1,18 @@
+
+.hotkeys-icon-heart:before { content: '\e800'; } /* '' */
+.hotkeys-icon-keyboard-black:before { content: '\e801'; } /* '' */
+.hotkeys-icon-pencil:before { content: '\e802'; } /* '' */
+.hotkeys-icon-minus-cir-fat:before { content: '\e803'; } /* '' */
+.hotkeys-icon-plus-cir-fat:before { content: '\e804'; } /* '' */
+.hotkeys-icon-plus-cir:before { content: '\e805'; } /* '' */
+.hotkeys-icon-minus-cir:before { content: '\e806'; } /* '' */
+.hotkeys-icon-minus:before { content: '\e807'; } /* '' */
+.hotkeys-icon-plus:before { content: '\e808'; } /* '' */
+.hotkeys-icon-emo-happy:before { content: '\e809'; } /* '' */
+.hotkeys-icon-download:before { content: '\f02e'; } /* '' */
+.hotkeys-icon-upload:before { content: '\f02f'; } /* '' */
+.hotkeys-icon-gamepad:before { content: '\f11b'; } /* '' */
+.hotkeys-icon-keyboard-white:before { content: '\f11c'; } /* '' */
+.hotkeys-icon-flag-checkered:before { content: '\f11e'; } /* '' */
+.hotkeys-icon-rocket:before { content: '\f135'; } /* '' */
+.hotkeys-icon-share:before { content: '\f1e0'; } /* '' */

@@ -1,2 +1,7 @@
 .project
 .settings
+
+.fontello*
+
+*.gz
+*.zip

@@ -9,3 +9,13 @@
 .plugin_hotkeys.hide_title .ui-dialog-titlebar {
 	display: none
 }
+
+.plugin_hotkeys.title_icon:before {
+	margin-right: 1.0em;
+}
+
+.plugin_hotkeys.menu_icon span:before {
+	margin-right: 0.3em;
+	font-size: 1.1em;
+	padding: 0.3em;
+}

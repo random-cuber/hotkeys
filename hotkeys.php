@@ -1,6 +1,9 @@
 <?php
 
+//
 // Roundcube Hot Keys Plugin
+//
+
 class hotkeys extends rcube_plugin {
 
     public $task = '.*'; // supported tasks regex filter
@@ -27,8 +30,9 @@ class hotkeys extends rcube_plugin {
 
         if ($this->rc->output->type == 'html') {
             $this->rc->output->include_script('list.js'); // global
-            $this->include_script('assets/jquery.hotkeys.js');
+            $this->include_script('assets/hotkeys/jquery.hotkeys.js');
             $this->include_script('hotkeys.js');
+            $this->include_stylesheet( 'assets/fontello/css/hotkeys.css');
             $this->include_stylesheet( 'skins' . '/style.css');
             $this->include_stylesheet($this->local_skin_path() . '/style.css');
             $this->add_texts('localization', true);
@@ -185,7 +189,8 @@ class hotkeys extends rcube_plugin {
                     'label'    => 'button_text',
                     'title'    => 'button_title',
                     'command'  => $this->key('activate'),
-                    'class'    => 'button hotkeys download', // TODO icon
+                    'class'    => 'button plugin_hotkeys_button_outer',
+                    'innerclass' => 'button-inner plugin_hotkeys_button_inner hotkeys-icon-keyboard-black', 
                 ),'toolbar');
         }
     }
@@ -411,7 +416,7 @@ class hotkeys extends rcube_plugin {
     function hook_preferences_list($args) {
         if ($this->is_plugin_section($args)) {
             $blocks = & $args['blocks'];
-            $section = $this->key('section');
+            $section = $this->key('section'); // css
             $blocks[$section] = array(); $entry = & $blocks[$section];
             $entry['name'] = $this->quoted('hotkeys');
             foreach($this->settings_checkbox_list() as $name) {
