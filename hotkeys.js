@@ -93,15 +93,16 @@ function plugin_hotkeys() {
 
 	// announce plugin access key
 	this.plugin_button_update = function plugin_button_update() {
-		self.log('...');
-		var button = self.html_by_id(self.key('button'));
 		var hotkey = self.env('plugin_hotkey').toUpperCase();
-		var title = button.attr('title') + ' [' + hotkey + ']';
+		var suffix = '[' + hotkey + ']';
+		self.log(suffix);
+		var button = self.html_by_id(self.key('button'));
+		var title = button.attr('title') + ' ' + suffix;
 		button.attr('title', title);
 	}
 
 	function target_title(target) {
-		target = target || document;
+		var target = target || document;
 		return $(target).find("title").text();
 	}
 
@@ -226,6 +227,7 @@ function plugin_hotkeys() {
 		self.save_pref('profile', profile);
 	}
 
+	// available mapping profiles
 	this.profile_list = function() {
 		return self.env('profile_list') || [];
 	}
@@ -378,7 +380,8 @@ function plugin_hotkeys() {
 			self.log(command);
 			var auto_enable = self.env('command_auto_enable') || false;
 			var was_enabled = rcmail.command_enabled(command) || false;
-			if (auto_enable && !was_enabled) {
+			var manage_enabled = auto_enable && !was_enabled;
+			if (manage_enabled) {
 				rcmail.enable_command(command, true);
 			}
 			try {
@@ -391,7 +394,7 @@ function plugin_hotkeys() {
 			} catch (e) {
 				self.log('error: ' + e, true);
 			} finally {
-				if (auto_enable && !was_enabled) {
+				if (manage_enabled) {
 					rcmail.enable_command(command, false);
 				}
 			}
@@ -970,7 +973,7 @@ plugin_hotkeys.prototype.show_arkon = function(args) {
 	})
 
 	mapping_widget.addEventListener('initrow', function(row) {
-		$('#' + row.id).contextmenu(show_menu);
+		self.html_by_id(row.id).contextmenu(show_menu);
 	})
 
 	function menu_handler(id) {
@@ -995,7 +998,7 @@ plugin_hotkeys.prototype.show_arkon = function(args) {
 	}
 
 	var menu_info = { // TODO css
-		id : 'hotkeys_arkon_menu',
+		id : 'plugin_hotkeys_arkon_menu',
 		handler : menu_handler,
 		item_list : [ {
 			id : 'new',
@@ -1251,6 +1254,8 @@ plugin_hotkeys.prototype.show_changer = function(args) {
 	var profile_list = self.profile_list();
 	var command_list = self.build_command_list();
 	var context_mapa = self.env('context_mapa');
+	var shortcut_list = self.shortcut_list();
+	var shortcut_keys = shortcut_list.join(' ');
 
 	var content = $('<div>');
 
@@ -1314,34 +1319,51 @@ plugin_hotkeys.prototype.show_changer = function(args) {
 		return sel;
 	}
 
-	function keyspypad(id) {
-		var row = $('<tr>');
-		table.append(row);
+	function keyspypad(id) { // TODO css
+		var row = $('<tr>').appendTo(table);
+
 		var lab = label(id);
-		var inp = input(id + '_enter').css({
-			width : '15em',
-		});
+
 		var btn = button(id + '_click').css({
 			width : '15em',
 		// height : '1.7em',
 		}).text('...').attr({
 		// class : 'ui-icon ui-icon-heart',
 		}); // .button();
-		row.append($('<td>').append(lab));
-		row.append($('<td>').append(btn).append(inp));
 
 		btn.click(function btn_click(event) {
 			self.log('...');
 			var args = {};
 			args.key = '';
+			args.shortcut_keys = shortcut_keys;
 			args.open = function() {
 				args.key = 'invalid';
 			}
 			args.close = function() {
 				inp.val(args.key);
+				inp.trigger('input');
 			}
 			self.show_keyspypad(args);
 		});
+
+		var inp = input(id + '_enter').css({
+			width : '15em',
+		}).attr({
+		//
+		});
+
+		inp.on('input', function inp_change(event) {
+			var key = inp.val();
+			var is_valid = shortcut_list.indexOf(key) >= 0;
+			if (is_valid) {
+				inp.css('background-color', '#c1f0c1'); // green
+			} else {
+				inp.css('background-color', '#ffad99'); // red
+			}
+		});
+
+		row.append($('<td>').append(lab));
+		row.append($('<td>').append(btn).append(inp));
 
 		return inp;
 	}
@@ -1482,7 +1504,7 @@ plugin_hotkeys.prototype.show_keyspypad = function(args) {
 
 	function keyspypad_bind() {
 		self.log('...');
-		var keys = self.shortcut_list().join(" ");
+		var keys = args.shortcut_keys;
 		$(document).bind('keydown', keys, keyspypad_handler);
 		self.event_order(keys);
 	}
@@ -1844,12 +1866,10 @@ plugin_hotkeys.prototype.show_share = function(args) {
 }
 
 // plugin singleton
-plugin_hotkeys.instance = {};
+plugin_hotkeys.instance = null;
 
-// plugin setup
 if (rcmail) {
 
-	// plugin instance
 	rcmail.addEventListener('init', function instance(param) {
 		plugin_hotkeys.instance = new plugin_hotkeys();
 		plugin_hotkeys.instance.initialize();

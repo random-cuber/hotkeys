@@ -20,6 +20,9 @@ $config['plugin.hotkeys.command_auto_enable'] = true;
 // place plugin key handlers first
 $config['plugin.hotkeys.enable_event_order'] = false; // FIXME
 
+// remove invalid mapping entries
+$config['plugin.hotkeys.enable_mapping_cleanup'] = true;
+
 // global plugin dialog access shortcut
 $config['plugin.hotkeys.plugin_hotkey'] = 'f1';
 
@@ -36,31 +39,42 @@ $config['plugin.hotkeys.mapping_list'] = array();
 // memento of one time default mapping application
 $config['plugin.hotkeys.reset_to_default'] = true;
 
-// provided one time init command/hotkey mapping table
+// provided one time init command/hotkey mapping table - from file
+$config['plugin.hotkeys.default_mapping_file'] = 'hotkeys.json';
+
+// provided one time init command/hotkey mapping table - form here
 $config['plugin.hotkeys.default_mapping_list'] = array(
-        array(
+        array( // TODO remove empty template
                 'profile' => '',
                 'context' => '',
                 'command' => '',
-                'key' => '',
                 'comment' => '',
                 'script' => '',
+                'key' => '',
         ),
-        array(
+        array( // TODO remove test entry
                 'profile' => 'user',
                 'context' => 'any',
                 'command' => 'test',
-                'key' => 'ctrl+alt+a',
-                'comment' => 'test entry from default config',
-                'script' => 'alert("test");',
+                'comment' => 'test entry 1',
+                'script' => 'alert("test 1");',
+                'key' => 'ctrl+alt+1',
         ),
-        array(
+        array( // TODO remove test entry
+                'profile' => 'user',
+                'context' => 'any',
+                'command' => 'test',
+                'comment' => 'test entry 2',
+                'script' => 'alert("test 2");',
+                'key' => 'ctrl+alt+2',
+        ),
+        array( // TODO remove example
                 'profile' => 'user',
                 'context' => 'any',
                 'command' => 'reload',
-                'key' => 'alt+f1',
                 'comment' => 'reload client from the server',
                 'script' => 'document.location.reload(true);',
+                'key' => 'alt+f1',
         ),
 );
 
@@ -84,8 +98,8 @@ $config['plugin.hotkeys.context_mapa'] = array(
         'any' => array( // catch-all context
                 'task_list' => array(),  // required tasks
                 'action_list' => array(), // required actions
-                'focused_mapa' => array(), // node id -> present/missing in focus
-                'target_name_mapa' => array(), // node name rx -> present/missing in event target
+                'focused_mapa' => array(), // node id => present/missing in focus
+                'target_name_mapa' => array(), // node name rx => present/missing in event target
         ),
 
         'mail_any' => array(
@@ -139,6 +153,7 @@ $config['plugin.hotkeys.options_filter_input'] = false;
 
 // user managed commands
 $config['plugin.hotkeys.custom_command_list'] = array(
+        '#', // a place for 'new' 
         'test', // command testing
         'reload', // reload page in browser
         'select:all', // global list selection
@@ -277,7 +292,7 @@ $config['plugin.hotkeys.settings_checkbox_list'] = array(
         'enable_logging',
         'enable_button',
         // 'options_filter_input',
-        // 'reset_to_default',
+        'reset_to_default',
 );
 
 // expose these settings in user ui

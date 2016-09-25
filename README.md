@@ -50,10 +50,8 @@ Main plugin dialog:
 
 Navigate to:
 ```
-[Anywhere] -> [Press plugin access key]
+[Anywhere] -> [Press plugin access key (default: F1)]
 ```
-
-Default plugin access key: `F1`
 
 Dialog entries:
 * `TODO` : TODO

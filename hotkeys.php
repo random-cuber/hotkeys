@@ -1,5 +1,6 @@
 <?php
 
+// Roundcube Hot Keys Plugin
 class hotkeys extends rcube_plugin {
 
     public $task = '.*'; // supported tasks regex filter
@@ -32,19 +33,8 @@ class hotkeys extends rcube_plugin {
             $this->include_stylesheet($this->local_skin_path() . '/style.css');
             $this->add_texts('localization', true);
             $this->provide_mapping_list();
-            $this->provide_client_env_var();
-        }
-
-        if($this->config_get('enable_button')) {
-            $this->add_button(array(
-                    'domain'   => 'hotkeys', 
-                    'id'       => $this->key('button'),
-                    'type'     => 'link',
-                    'label'    => 'button_text',
-                    'title'    => 'button_title',
-                    'command'  => $this->key('activate'), // see *.js
-                    'class'    => 'button hotkeys download', // TODO icon
-                ),'toolbar');
+            $this->provide_toolbar_button();
+            $this->provide_client_env_var(); // keep last
         }
 
         if($this->rc->task == 'mail') {
@@ -121,16 +111,39 @@ class hotkeys extends rcube_plugin {
         }
     }
     
-    // process default mapping setup
+    // remove by guid: missing, duplicate
+    function remove_invalid($mapping_list) {
+        $guid_mapa = array();
+        foreach($mapping_list as $index => $mapping) {
+            if($this->has_guid($mapping)) {
+                $guid = $this->guid($mapping);
+                if($guid_mapa[$guid]) {
+                    unset($mapping_list[$index]);
+                } else {
+                    $guid_mapa[$guid] = true; 
+                }
+            } else {
+                unset($mapping_list[$index]);
+            }
+        }
+        return array_values($mapping_list);
+    }
+        
+    // mapping default setup and table cleanup
     function provide_mapping_list() {
-        $reset_to_default = $this->config_get('reset_to_default');
-        if($reset_to_default) {
-            $json_list = $this->json_default(); // default.json
-            $iphp_list = $this->config_get('default_mapping_list'); // default.inc.php
+        // one time setup
+        if($this->config_get('reset_to_default')) {
+            $json_list = $this->json_default_mapping_file();
+            $iphp_list = $this->config_get('default_mapping_list');
             $mapping_list = array_merge($json_list, $iphp_list);
             $this->config_put('mapping_list', $mapping_list);
-            $this->config_put('reset_to_default', false); // one time
-            $this->log(print_r($mapping_list, true));
+            $this->config_put('reset_to_default', false);
+        }
+        // table cleanup
+        if($this->config_get('enable_mapping_cleanup')) {
+            $mapping_list = $this->config_get('mapping_list');
+            $mapping_list = $this->remove_invalid($mapping_list);
+            $this->config_put('mapping_list', $mapping_list);
         }
     }
     
@@ -160,6 +173,23 @@ class hotkeys extends rcube_plugin {
        }
     }
     
+    // optional button
+    function provide_toolbar_button() {
+        $activate_plugin = $this->config_get('activate_plugin');
+        $enable_button = $this->config_get('enable_button');
+        if($activate_plugin && $enable_button) {
+            $this->add_button(array(
+                    'domain'   => 'hotkeys', 
+                    'id'       => $this->key('button'),
+                    'type'     => 'link',
+                    'label'    => 'button_text',
+                    'title'    => 'button_title',
+                    'command'  => $this->key('activate'),
+                    'class'    => 'button hotkeys download', // TODO icon
+                ),'toolbar');
+        }
+    }
+    
     // inject plugin default config
     function hook_config_get($args){
         $name = $args['name'];
@@ -185,10 +215,8 @@ class hotkeys extends rcube_plugin {
     }
 
     // default plugin mappings
-    function json_default() {
-        $prefix = $this->config_get('export_prefix');
-        $extension = $this->config_get('export_extension');
-        $name = $prefix .  '.' . $extension;
+    function json_default_mapping_file() {
+        $name = $this->config_get('default_mapping_file');
         $path = $this->home . '/' . $name;
         return $this->json_load($path);
     }

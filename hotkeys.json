@@ -1,13 +1,5 @@
 [
     {
-        "profile": "",
-        "context": "",
-        "command": "",
-        "key": "",
-        "script": "",
-        "comment": ""
-    },
-    {
         "profile": "cor.bosman",
         "command": "plugin.hotkeys.activate",
         "context": "any",
@@ -287,15 +279,6 @@
         "source": "external"
     },
     {
-        "profile": "user",
-        "command": "test",
-        "context": "any",
-        "comment": "user test",
-        "script": "alert(\"test\");",
-        "key": "f3",
-        "source": "custom"
-    },
-    {
         "profile": "linux",
         "command": "test",
         "context": "any",
@@ -460,23 +443,6 @@
         "script": "",
         "key": "k",
         "source": "internal"
-    },
-    {
-        "profile": "",
-        "context": "",
-        "command": "",
-        "key": "",
-        "comment": "",
-        "script": ""
-    },
-    {
-        "profile": "user",
-        "context": "any",
-        "command": "test",
-        "key": "ctrl+alt+a",
-        "comment": "test entry from default config",
-        "script": "alert(\"test\");",
-        "source": "custom"
     },
     {
         "profile": "user",
