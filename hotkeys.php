@@ -153,6 +153,7 @@ class hotkeys extends rcube_plugin {
            'supported_meta_keys',
            'supported_base_keys',
            'options_filter_input',
+           'command_auto_enable',
        );
        foreach($name_list as $name) {
            $this->set_env($name);

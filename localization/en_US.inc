@@ -48,10 +48,11 @@ $labels['remove'] = 'Remove';
 $labels['invoke']  = 'Invoke';
 $labels['close'] = 'Close';
 
+$labels['new'] = 'New';
 $labels['change'] = 'Change';
-$labels['share'] = 'Share';
-$labels['import'] = 'Import';
 $labels['export'] = 'Export';
+$labels['import'] = 'Import';
+$labels['share'] = 'Share';
 
 $labels['combine'] = 'Combine';
 

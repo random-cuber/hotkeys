@@ -14,6 +14,9 @@ $config['plugin.hotkeys.enable_logging'] = false;
 // plugin activation toolbar button
 $config['plugin.hotkeys.enable_button'] = true;
 
+// manage command enabelment around invocation
+$config['plugin.hotkeys.command_auto_enable'] = true;
+
 // place plugin key handlers first
 $config['plugin.hotkeys.enable_event_order'] = false; // FIXME
 

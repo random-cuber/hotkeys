@@ -17,15 +17,6 @@
         "source": "external"
     },
     {
-        "profile": "windows",
-        "context": "any",
-        "command": "test:windows",
-        "key": "f9",
-        "comment": "windows test",
-        "script": "alert('test');",
-        "source": "undefined"
-    },
-    {
         "profile": "andrei.pozolotin",
         "command": "plugin.contextmenu_folder.folder_create",
         "context": "mail_any",
@@ -111,7 +102,7 @@
         "command": "plugin.contextmenu.expandall",
         "context": "mail_any",
         "comment": "mailbox: expand all",
-        "script": "rcmail.enable_command(command,true); rcmail.command(command);",
+        "script": "",
         "key": "f10",
         "source": "external"
     },
@@ -120,7 +111,7 @@
         "command": "plugin.contextmenu.collapseall",
         "context": "mail_any",
         "comment": "mailbox: collapse all",
-        "script": "rcmail.enable_command(command,true); rcmail.command(command);",
+        "script": "",
         "key": "alt+f10",
         "source": "external"
     },
@@ -328,7 +319,8 @@
         "context": "any",
         "comment": "windows test",
         "script": "alert('test');",
-        "key": "f3"
+        "key": "f3",
+        "source": "custom"
     },
     {
         "profile": "cor.bosman",
@@ -467,6 +459,50 @@
         "comment": "go to following message",
         "script": "",
         "key": "k",
+        "source": "internal"
+    },
+    {
+        "profile": "",
+        "context": "",
+        "command": "",
+        "key": "",
+        "comment": "",
+        "script": ""
+    },
+    {
+        "profile": "user",
+        "context": "any",
+        "command": "test",
+        "key": "ctrl+alt+a",
+        "comment": "test entry from default config",
+        "script": "alert(\"test\");",
+        "source": "custom"
+    },
+    {
+        "profile": "user",
+        "context": "any",
+        "command": "reload",
+        "key": "alt+f1",
+        "comment": "reload client from the server",
+        "script": "document.location.reload(true);",
+        "source": "custom"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "#messagelist",
+        "context": "mail_any",
+        "comment": "focus: enter message list",
+        "script": "$(command).focus();",
+        "key": "ctrl+l",
+        "source": "custom"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "compose",
+        "context": "mail_list",
+        "comment": "message: compose new",
+        "script": "",
+        "key": "ctrl+n",
         "source": "internal"
     }
 ]

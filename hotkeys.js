@@ -43,7 +43,7 @@ function plugin_hotkeys() {
 	}
 
 	// locate internal jquery event handler
-	this.event_entry = function event_entry(handler_list, the_keys) {
+	function event_entry(handler_list, the_keys) {
 		var the_index = null
 		var the_value = null
 		$.each(handler_list, function(index, value) {
@@ -77,14 +77,14 @@ function plugin_hotkeys() {
 		if (!keydown) {
 			return;
 		}
-		var entry = self.event_entry(keydown, the_keys);
+		var entry = event_entry(keydown, the_keys);
 		if (!entry.value) {
 			return;
 		}
 		self.log('source: ' + entry.index);
 		keydown.splice(entry.index, 1);
 		keydown.unshift(entry.value);
-		var entry = self.event_entry(keydown, the_keys);
+		var entry = event_entry(keydown, the_keys);
 		if (!entry.value) {
 			return;
 		}
@@ -107,7 +107,7 @@ function plugin_hotkeys() {
 
 	// https://github.com/jeresig/jquery.hotkeys
 	function jquery_hotkeys_options() {
-		var filter_input = self.env('options_filter_input');
+		var filter_input = self.env('options_filter_input') || false;
 		$.hotkeys.options.filterTextInputs = filter_input;
 		$.hotkeys.options.filterInputAcceptingElements = filter_input;
 	}
@@ -166,12 +166,14 @@ function plugin_hotkeys() {
 		self.log(key + '=' + (no_dump ? '...' : self.json_encode(value)));
 	}
 
+	// activate keyboard shortcut handler
 	this.perform_bind = function perform_bind(target, keys, handler) {
 		self.log('title: ' + target_title(target));
 		$(target).bind('keydown', keys, handler);
 		self.event_order(keys);
 	}
 
+	// deactivate keyboard shortcut handler
 	this.perform_unbind = function perform_unbind(target, handler) {
 		self.log('title: ' + target_title(target));
 		$(target).unbind('keydown', handler);
@@ -218,9 +220,17 @@ function plugin_hotkeys() {
 
 	// current profile
 	this.profile_put = function(profile) {
+		if (profile == self.profile_get()) {
+			return;
+		}
 		self.save_pref('profile', profile);
 	}
 
+	this.profile_list = function() {
+		return self.env('profile_list') || [];
+	}
+
+	// combine commands from all sources
 	this.build_command_list = function() {
 		var custom_list = self.env('custom_command_list');
 		var internal_list = self.env('internal_command_list');
@@ -229,10 +239,11 @@ function plugin_hotkeys() {
 		return command_list.sort();
 	}
 
+	// produce a map: key => mapping_list
 	this.build_mapping = function build_mapping(mapping_list) {
 		var map = {};
 		$.each(mapping_list, function(index, mapping) {
-			var key = mapping.key, list;
+			var key = mapping.key;
 			if (key) {
 				if (!map[key]) {
 					map[key] = [];
@@ -257,7 +268,6 @@ function plugin_hotkeys() {
 		self.profile_mapping = self.build_mapping(mapping_list);
 		var keys = self.array_column(mapping_list, 'key').join(" ");
 		self.perform_bind(target, keys, self.profile_handler);
-
 	}
 
 	// deactivate keyboard shortcut handler
@@ -268,7 +278,7 @@ function plugin_hotkeys() {
 		self.profile_mapping = {};
 	}
 
-	// profile command processor
+	// profile command invoker
 	this.profile_handler = function profile_handler(event, key) {
 		self.log('key: ' + key);
 		var mapping_list = self.profile_mapping[key];
@@ -278,13 +288,15 @@ function plugin_hotkeys() {
 		return false; // event stop
 	}
 
-	// empty matches any
+	// list filter
 	function match_list(list, item) {
+		// empty matches any
 		return list.length == 0 || list.indexOf(item) >= 0;
 	}
 
-	// empty matches any
+	// focus filter
 	function match_focused(list) {
+		// empty matches any
 		if (list.length == 0) {
 			return true;
 		}
@@ -299,8 +311,9 @@ function plugin_hotkeys() {
 		return match;
 	}
 
-	// empty matches any
+	// event target filter
 	function match_target_name(list, event) {
+		// empty matches any
 		if (list.length == 0) {
 			return true;
 		}
@@ -316,20 +329,21 @@ function plugin_hotkeys() {
 		return match;
 	}
 
-	function flag(bool) {
+	// short representation for boolean
+	function char(bool) {
 		return bool ? '+' : '-';
 	}
 
 	// verify current execution context
-	this.match_context = function match_context(index, event) {
+	this.match_context = function match_context(name, event) {
 
 		var task = rcmail.env.task;
 		var action = rcmail.env.action;
 		self.log('task=[' + task + '] action=[' + action + ']');
 
 		var context_mapa = self.env('context_mapa');
-		var context = context_mapa[index];
-		self.log(index + '=' + self.json_encode(context, 4));
+		var context = context_mapa[name] || {};
+		self.log(name + '=' + self.json_encode(context, 4));
 
 		var task_list = context.task_list || [];
 		var action_list = context.action_list || [];
@@ -344,8 +358,8 @@ function plugin_hotkeys() {
 		var has_match = has_task && has_action && has_focused
 				&& has_target_name;
 
-		var match_mask = flag(has_task) + flag(has_action) + flag(has_focused)
-				+ flag(has_target_name);
+		var match_mask = char(has_task) + char(has_action) + char(has_focused)
+				+ char(has_target_name);
 
 		self.log('has_match=' + has_match + ' (' + match_mask + ')');
 
@@ -355,25 +369,50 @@ function plugin_hotkeys() {
 	// invoke command defined by mapping
 	this.execute = function execute(mapping, event, force) {
 		var context = mapping.context;
-		if (!self.match_context(context, event) && !force) {
+		var enable = force || self.match_context(context, event);
+		if (!enable) {
 			return;
 		}
 		var command = mapping.command;
-		var script = mapping.script;
 		if (command) {
-			if (script) {
-				self.log(command + ': ' + script);
-				self.evaluate(mapping);
-			} else {
-				self.log(command);
-				rcmail.command(command);
+			self.log(command);
+			var auto_enable = self.env('command_auto_enable') || false;
+			var was_enabled = rcmail.command_enabled(command) || false;
+			if (auto_enable && !was_enabled) {
+				rcmail.enable_command(command, true);
+			}
+			try {
+				var script = mapping.script;
+				if (script) {
+					self.evaluate(mapping);
+				} else {
+					rcmail.command(command);
+				}
+			} catch (e) {
+				self.log('error: ' + e, true);
+			} finally {
+				if (auto_enable && !was_enabled) {
+					rcmail.enable_command(command, false);
+				}
 			}
 		} else {
 			self.log('error: invalid command: ' + command, true);
 		}
 	}
 
-	//
+	// produce valid object
+	this.provide_mapping = function(profile, command, context) {
+		return {
+			profile : profile || '',
+			command : command || '',
+			context : context || '',
+			comment : '',
+			script : '',
+			key : '',
+		}
+	}
+
+	// verify membership in the list
 	this.mapping_list_has = function mapping_list_has(mapping) {
 		var guid = self.guid(mapping)
 		var mapping_list = self.env('mapping_list');
@@ -493,11 +532,7 @@ function plugin_hotkeys() {
 		$.each(mapping_list, function(index1, mapping1) {
 			var guid1 = self.guid(mapping1);
 			var source = command_source[mapping1.command];
-			if (source) {
-				mapping_list[index1].source = source;
-			} else {
-				mapping_list[index1].source = 'undefined';
-			}
+			mapping_list[index1].source = source ? source : 'undefined';
 			var found = false;
 			$.each(virtual_list, function(index2, mapping2) {
 				var guid2 = self.guid(mapping2);
@@ -589,21 +624,23 @@ function plugin_hotkeys() {
 			return ui.panel[0].id;
 		} else if (ui.newPanel) {
 			return ui.newPanel[0].id;
+		} else {
+			self.log('error: invalid ui panel', true);
+			return '';
 		}
 	}
 
+	// verify value against the list, fall back to first
 	this.valid_val = function valid_val(value_list, value) {
 		return value_list.indexOf(value) >= 0 ? value : value_list[0];
 	}
 
+	// verify key against the map, fall back to first
 	this.valid_key = function valid_key(value_mapa, key) {
-		if (value_mapa[key]) {
-			return key;
-		} else {
-			return Object.keys(value_mapa)[0];
-		}
+		return value_mapa[key] ? key : Object.keys(value_mapa)[0];
 	}
 
+	// resolve string to jquery
 	this.html_by_id = function(id) {
 		return id.startsWith('#') ? $(id) : $('[id="' + id + '"]');
 	}
@@ -613,10 +650,12 @@ function plugin_hotkeys() {
 // script evaluator
 plugin_hotkeys.prototype.evaluate = function evaluate(mapping) {
 	var self = this;
-	self.log('...');
-	var command = mapping.command;
 	var script = mapping.script;
-	eval(script); // TODO build eval sand box
+	var command = mapping.command;
+	self.log(script);
+	// TODO build eval sand box
+	// expose vars: $, rcmail, command
+	eval(script);
 }
 
 // dialog content
@@ -803,7 +842,7 @@ plugin_hotkeys.prototype.html_list = function(args, opts) {
 				});
 			});
 			widget.insert_row({
-				className : 'row',
+				className : '',
 				style : '',
 				id : rcmrow(row_id),
 				uid : row_id,
@@ -886,7 +925,7 @@ plugin_hotkeys.prototype.html_tabs = function(args) {
 plugin_hotkeys.prototype.show_arkon = function(args) {
 	var self = this;
 
-	var profile_list = self.env('profile_list');
+	var profile_list = self.profile_list();
 	var filter_list = self.filter_list();
 	var field_list = self.field_list();
 
@@ -921,13 +960,13 @@ plugin_hotkeys.prototype.show_arkon = function(args) {
 	});
 
 	mapping_widget.addEventListener('dblclick', function() {
-		show_changer();
 		hide_menu();
+		show_changer();
 	})
 
 	mapping_widget.addEventListener('click', function() {
-		render();
 		hide_menu();
+		render();
 	})
 
 	mapping_widget.addEventListener('initrow', function(row) {
@@ -937,26 +976,39 @@ plugin_hotkeys.prototype.show_arkon = function(args) {
 	function menu_handler(id) {
 		self.log('item: ' + id);
 		switch (id) {
+		case 'new':
+			show_changer(self.provide_mapping(self.profile_get()));
+			break;
 		case 'change':
 			show_changer();
 			break;
 		case 'remove':
 			remove();
 			break;
+		case 'invoke':
+			self.execute(mapping_widget.$choice(), null, true);
+			break;
 		default:
+			self.log('error: ' + id, true);
 			break;
 		}
 	}
 
-	var menu_info = {
+	var menu_info = { // TODO css
 		id : 'hotkeys_arkon_menu',
 		handler : menu_handler,
 		item_list : [ {
+			id : 'new',
+			class : 'icon unread',
+		}, {
 			id : 'change',
 			class : 'icon edit',
 		}, {
 			id : 'remove',
 			class : 'icon cross',
+		}, {
+			id : 'invoke',
+			class : 'icon flagged',
 		}, ],
 	}
 
@@ -972,7 +1024,7 @@ plugin_hotkeys.prototype.show_arkon = function(args) {
 		var row_next = tr.attr('id').replace(/^rcmrow/, '');
 		var row_past = mapping_widget.get_single_selection();
 		if (row_next == row_past) {
-			// toggle
+			// toggle on/off
 			rcmail.show_menu(menu_info.id, undefined, event);
 		} else {
 			mapping_widget.select(row_next);
@@ -994,8 +1046,8 @@ plugin_hotkeys.prototype.show_arkon = function(args) {
 	content.append(filter_part);
 	content.append(mapping_part);
 
-	function show_changer() {
-		var mapping = mapping_widget.$choice();
+	function show_changer(choice) {
+		var mapping = choice ? choice : mapping_widget.$choice();
 		if (mapping) {
 			self.show_changer({
 				mapping : mapping,
@@ -1015,7 +1067,7 @@ plugin_hotkeys.prototype.show_arkon = function(args) {
 		self.profile_put(profile);
 		mapping_widget.$build(self.presentation_list(profile));
 		select_filter(active_filter);
-		// mapping_widget.select(0); // TODO
+		// mapping_widget.select(active_mapping); // TODO select last
 	}
 
 	function select_filter(filter) {
@@ -1101,6 +1153,12 @@ plugin_hotkeys.prototype.show_arkon = function(args) {
 	}
 
 	var buttons = [ {
+		id : 'new',
+		text : self.localize('new'),
+		click : function() {
+			show_changer(self.provide_mapping(self.profile_get()));
+		}
+	}, {
 		id : 'change',
 		text : self.localize('change'),
 		class : 'mainaction',
@@ -1121,12 +1179,6 @@ plugin_hotkeys.prototype.show_arkon = function(args) {
 			primary : "ui-icon-blank"
 		},
 	}, {
-		id : 'share',
-		text : self.localize('share'),
-		click : function() {
-			self.show_share();
-		}
-	}, {
 		id : 'export',
 		text : self.localize('export'),
 		click : function() {
@@ -1139,6 +1191,12 @@ plugin_hotkeys.prototype.show_arkon = function(args) {
 			self.show_import({
 				refresh : refresh,
 			});
+		}
+	}, {
+		id : 'share',
+		text : self.localize('share'),
+		click : function() {
+			self.show_share();
 		}
 	}, {
 		text : '*',
@@ -1190,7 +1248,7 @@ plugin_hotkeys.prototype.show_changer = function(args) {
 	var mapping = args.mapping;
 
 	var field_list = self.field_list();
-	var profile_list = self.env('profile_list');
+	var profile_list = self.profile_list();
 	var command_list = self.build_command_list();
 	var context_mapa = self.env('context_mapa');
 
@@ -1377,8 +1435,7 @@ plugin_hotkeys.prototype.show_changer = function(args) {
 		id : 'invoke',
 		text : self.localize('invoke'),
 		click : function() {
-			var event = null, force = true;
-			self.execute(result(), event, force);
+			self.execute(result(), null, true);
 		}
 	}, {
 		id : 'close',
@@ -1472,7 +1529,7 @@ plugin_hotkeys.prototype.show_keyspypad = function(args) {
 plugin_hotkeys.prototype.show_export = function(args) {
 	var self = this;
 
-	var profile_list = self.env('profile_list');
+	var profile_list = self.profile_list();
 
 	var content = $('<div>');
 
