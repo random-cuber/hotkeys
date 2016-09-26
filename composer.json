@@ -5,7 +5,7 @@
 	"homepage": "https://github.com/random-cuber/hotkeys",
 	"license": "Apache",
 	"type": "roundcube-plugin",
-	"version": "1.2.14",
+	"version": "1.2.15",
 	"authors": [{
 		"name": "Andrei Pozolotin",
 		"email": "andrei.pozolotin@gmail.com",
