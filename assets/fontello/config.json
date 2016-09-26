@@ -107,6 +107,24 @@
       "css": "rocket",
       "code": 61749,
       "src": "fontawesome"
+    },
+    {
+      "uid": "afe93fc3d2e6e389194bb3771f00fdb1",
+      "css": "accessibility",
+      "code": 59402,
+      "src": "elusive"
+    },
+    {
+      "uid": "d4385b9337eeaa7feb48465b50649042",
+      "css": "universal-access",
+      "code": 59403,
+      "src": "elusive"
+    },
+    {
+      "uid": "53ed8570225581269cd7eff5795e8bea",
+      "css": "emo-unhappy",
+      "code": 59404,
+      "src": "fontelico"
     }
   ]
 }

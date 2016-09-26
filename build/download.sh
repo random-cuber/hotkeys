@@ -1,36 +1,37 @@
 #!/bin/bash
 
 keys_save() {
-    echo "keys_save"
+    echo "$FUNCNAME"
     local url="https://github.com/random-cuber/jquery.hotkeys/archive/master.tar.gz"
     local package="hotkeys.tar.gz"
-    wget "$url" -O "$package"
-    tar xv --strip=1 --dir="$keys_dir" --file="$package" \
+    wget -q "$url" -O "$package"
+    tar x --strip=1 --dir="$keys_dir" --file="$package" \
         --wildcards '*/jquery.hotkeys.js' '*/README.md'
     rm -rf "$package"
 }
 
 font_open() {
-    echo "font_open"
+    echo "$FUNCNAME"
     curl \
         --silent --show-error --fail --output .fontello \
         --form "config=@$font_dir/config.json" \
         ${font_host}
+    xdg-open ${font_host}/$(cat .fontello)
 }
 
 font_save() {
-    echo "font_save"
+    echo "$FUNCNAME"
     rm -rf .fontello.src .fontello.zip
     curl \
         --silent --show-error --fail --output .fontello.zip \
         ${font_host}/$(cat .fontello)/get
-    unzip .fontello.zip -d .fontello.src
+    unzip -q .fontello.zip -d .fontello.src
     rm -rf "$font_dir"/*
     mv .fontello.src/fontello-*/* "$font_dir"
 }
 
 font_clean() {
-    echo "font_clean"
+    echo "$FUNCNAME"
     rm -rf .fontello*
 }
 

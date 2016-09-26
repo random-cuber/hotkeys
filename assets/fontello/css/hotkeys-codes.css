@@ -9,6 +9,9 @@
 .hotkeys-icon-minus:before { content: '\e807'; } /* '' */
 .hotkeys-icon-plus:before { content: '\e808'; } /* '' */
 .hotkeys-icon-emo-happy:before { content: '\e809'; } /* '' */
+.hotkeys-icon-accessibility:before { content: '\e80a'; } /* '' */
+.hotkeys-icon-universal-access:before { content: '\e80b'; } /* '' */
+.hotkeys-icon-emo-unhappy:before { content: '\e80c'; } /* '' */
 .hotkeys-icon-download:before { content: '\f02e'; } /* '' */
 .hotkeys-icon-upload:before { content: '\f02f'; } /* '' */
 .hotkeys-icon-gamepad:before { content: '\f11b'; } /* '' */

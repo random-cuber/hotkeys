@@ -9,7 +9,7 @@ $labels['enable_button'] = 'Enable toolbar button';
 $labels['plugin_hotkey'] = 'Plugin access key';
 $labels['reset_to_default'] = 'Reset mappings to default';
 
-$labels['button_text'] = 'HotKey';
+$labels['button_text'] = 'Keys';
 $labels['button_title'] = 'Configure keyboard shortcuts';
 
 $labels['command_hotkeys'] = 'Command hotkeys';

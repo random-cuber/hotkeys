@@ -26,6 +26,9 @@ $config['plugin.hotkeys.enable_mapping_cleanup'] = true;
 // global plugin dialog access shortcut
 $config['plugin.hotkeys.plugin_hotkey'] = 'f1';
 
+// global plugin icon, choose from assets/fontello
+$config['plugin.hotkeys.plugin_icon_class'] = 'hotkeys-icon-keyboard-black';
+
 // file export naming: 'prefix-profile.extension'
 $config['plugin.hotkeys.export_prefix'] = 'hotkeys';
 $config['plugin.hotkeys.export_extension'] = 'json';
@@ -311,6 +314,7 @@ $config['plugin.hotkeys.settings_area_list'] = array(
 // expose these settings in user ui
 $config['plugin.hotkeys.settings_text_list'] = array(
         'plugin_hotkey',
+        // 'plugin_icon_class',
 );
 
 ?>

@@ -158,6 +158,7 @@ class hotkeys extends rcube_plugin {
            'enable_logging',
            'enable_event_order',
            'plugin_hotkey',
+           'plugin_icon_class',
            'export_prefix',
            'export_extension',
            'import_local',
@@ -181,17 +182,18 @@ class hotkeys extends rcube_plugin {
     function provide_toolbar_button() {
         $activate_plugin = $this->config_get('activate_plugin');
         $enable_button = $this->config_get('enable_button');
+        $plugin_icon_class = $this->config_get('plugin_icon_class');
         if($activate_plugin && $enable_button) {
             $this->add_button(array(
-                    'domain'   => 'hotkeys', 
-                    'id'       => $this->key('button'),
-                    'type'     => 'link',
-                    'label'    => 'button_text',
-                    'title'    => 'button_title',
-                    'command'  => $this->key('activate'),
-                    'class'    => 'button plugin_hotkeys_button_outer',
-                    'innerclass' => 'button-inner plugin_hotkeys_button_inner hotkeys-icon-keyboard-black', 
-                ),'toolbar');
+                'domain'   => 'hotkeys', 
+                'id'       => $this->key('button'),
+                'type'     => 'link',
+                'label'    => 'button_text',
+                'title'    => 'button_title',
+                'command'  => $this->key('activate'),
+                'class'    => 'button plugin_hotkeys_button_outer',
+                'innerclass' => 'button-inner plugin_hotkeys_button_inner ' . $plugin_icon_class, 
+            ),'toolbar');
         }
     }
     

@@ -658,6 +658,10 @@ function plugin_hotkeys() {
 				'plugin_hotkeys title_icon ' + name);
 	}
 
+	this.plugin_icon_class = function() {
+		return self.env('plugin_icon_class');
+	}
+
 	// //
 
 	self.initialize();
@@ -1013,10 +1017,10 @@ plugin_hotkeys.prototype.show_arkon = function(args) {
 		}
 	}
 
-	var menu_info = { // TODO css
+	var menu_info = {
 		id : 'plugin_hotkeys_arkon_menu',
 		handler : menu_handler,
-		class_div: 'plugin_hotkeys menu_icon popupmenu',
+		class_div : 'plugin_hotkeys menu_icon popupmenu',
 		item_list : [ {
 			id : 'new',
 			class_span : 'hotkeys-icon-plus',
@@ -1241,7 +1245,7 @@ plugin_hotkeys.prototype.show_arkon = function(args) {
 	var options = {
 		width : 'auto',
 		open : function open(event, ui) {
-			self.dialog_icon($(this).parent(), 'hotkeys-icon-keyboard-black');
+			self.dialog_icon($(this).parent(), self.plugin_icon_class());
 			self.has_part_arkon = true;
 			self.apply_binds([ 'profile_unbind' ]);
 			init_tabs();
@@ -1342,17 +1346,16 @@ plugin_hotkeys.prototype.show_changer = function(args) {
 		return sel;
 	}
 
-	function keyspypad(id) { // TODO css
+	function keyspypad(id) {
 		var row = $('<tr>').appendTo(table);
 
 		var lab = label(id);
 
 		var btn = button(id + '_click').css({
 			width : '15em',
-		// height : '1.7em',
-		}).text('...').attr({
-		// class : 'ui-icon ui-icon-heart',
-		}); // .button();
+		}).text('').attr({
+			class : self.plugin_icon_class(),
+		});
 
 		btn.click(function btn_click(event) {
 			self.log('...');
@@ -1518,12 +1521,14 @@ plugin_hotkeys.prototype.show_keyspypad = function(args) {
 
 	var content = $('<div>').css({
 		'vertical-align' : 'middle',
+		'text-align' : 'center',
 	});
 
 	var icon = $('<span >').attr({
-		class : 'ui-icon ui-icon-heart',
+		class : self.plugin_icon_class(),
 	}).css({
-		margin : '0 auto',
+		'font-size' : '3em',
+		'margin' : '0 auto',
 	}).appendTo(content);
 
 	function keyspypad_bind() {

@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'hotkeys';
-  src: url('../font/hotkeys.eot?96178962');
-  src: url('../font/hotkeys.eot?96178962#iefix') format('embedded-opentype'),
-       url('../font/hotkeys.woff2?96178962') format('woff2'),
-       url('../font/hotkeys.woff?96178962') format('woff'),
-       url('../font/hotkeys.ttf?96178962') format('truetype'),
-       url('../font/hotkeys.svg?96178962#hotkeys') format('svg');
+  src: url('../font/hotkeys.eot?50047915');
+  src: url('../font/hotkeys.eot?50047915#iefix') format('embedded-opentype'),
+       url('../font/hotkeys.woff2?50047915') format('woff2'),
+       url('../font/hotkeys.woff?50047915') format('woff'),
+       url('../font/hotkeys.ttf?50047915') format('truetype'),
+       url('../font/hotkeys.svg?50047915#hotkeys') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -15,7 +15,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'hotkeys';
-    src: url('../font/hotkeys.svg?96178962#hotkeys') format('svg');
+    src: url('../font/hotkeys.svg?50047915#hotkeys') format('svg');
   }
 }
 */
@@ -65,6 +65,9 @@
 .hotkeys-icon-minus:before { content: '\e807'; } /* '' */
 .hotkeys-icon-plus:before { content: '\e808'; } /* '' */
 .hotkeys-icon-emo-happy:before { content: '\e809'; } /* '' */
+.hotkeys-icon-accessibility:before { content: '\e80a'; } /* '' */
+.hotkeys-icon-universal-access:before { content: '\e80b'; } /* '' */
+.hotkeys-icon-emo-unhappy:before { content: '\e80c'; } /* '' */
 .hotkeys-icon-download:before { content: '\f02e'; } /* '' */
 .hotkeys-icon-upload:before { content: '\f02f'; } /* '' */
 .hotkeys-icon-gamepad:before { content: '\f11b'; } /* '' */
