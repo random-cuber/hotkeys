@@ -141,16 +141,57 @@ function plugin_hotkeys() {
 
 	}
 
-	// perform hot key handler bind/unbind on root and frame
+	// perform hot key handler bind/unbind on root and frames
 	this.apply_binds = function apply_binds(func_list) {
-		$.each(func_list, function apply_root(_, func) {
-			self.log(func);
-			self[func](document);
-			$('iframe').each(function() {
-				$(this).load(function apply_frame() {
-					self.log(func);
-					self[func](this.contentWindow.document);
+		// frame load handler memento
+		var key_has_load = self.key('frame_has_load');
+		// frame load function registry
+		var key_func_mapa = self.key('frame_func_mapa');
+		//
+		function apply_item(name, func, target) {
+			self.log(name + ': ' + func);
+			self[func](target);
+		}
+		//
+		function apply_list(name, func_list, target) {
+			$.each(func_list, function(_, func) {
+				apply_item(name, func, target);
+			});
+		}
+		//
+		apply_list('root', func_list, document);
+		//
+		$('iframe').each(function() {
+			var frame = this; // content:old
+			var target = frame.contentWindow.document;
+			// setup frame load handler
+			if (!$(frame).data(key_has_load)) {
+				$(frame).data(key_has_load, true);
+				$(frame).bind('load', function frame_load() {
+					var frame = this; // content:new
+					var target = frame.contentWindow.document;
+					var func_mapa = $(frame).data(key_func_mapa);
+					apply_list('frame-load', func_mapa, target);
 				});
+			}
+			// process bind@onload, unbind@immediately
+			$.each(func_list, function apply_func(_, func) {
+				// binder function convention: "entry_action()"
+				var split = func.split('_');
+				var entry = split[0], action = split[1];
+				var func_mapa = $(frame).data(key_func_mapa) || {};
+				if (action == 'bind') {
+					// register bind into frame load
+					func_mapa[entry] = func;
+				} else if (action == 'unbind') {
+					// unregister bind from frame load
+					delete func_mapa[entry];
+					// process unbind immediately
+					apply_item('frame-exec', func, target);
+				} else {
+					self.log('error: func: ' + func, true);
+				}
+				$(frame).data(key_func_mapa, func_mapa);
 			});
 		});
 	}
@@ -280,6 +321,7 @@ function plugin_hotkeys() {
 	this.profile_unbind = function profile_unbind(target) {
 		var profile = self.profile_get();
 		self.log('profile: ' + profile);
+		// self.log('stack: ' + (new Error()).stack); XXX
 		self.perform_unbind(target, self.profile_handler);
 		self.profile_mapping = {};
 	}
@@ -1244,7 +1286,8 @@ plugin_hotkeys.prototype.show_arkon = function(args) {
 
 	var options = {
 		width : 'auto',
-		open : function open(event, ui) {
+		open : function arkon_open(event, ui) {
+			self.log('...');
 			self.dialog_icon($(this).parent(), self.plugin_icon_class());
 			self.has_part_arkon = true;
 			self.apply_binds([ 'profile_unbind' ]);
@@ -1257,7 +1300,8 @@ plugin_hotkeys.prototype.show_arkon = function(args) {
 				filter_part.tabs('option', 'active', index);
 			}, 100);
 		},
-		close : function close(event, ui) {
+		close : function arkon_close(event, ui) {
+			self.log('...');
 			menu_part.remove();
 			self.apply_binds([ 'profile_bind' ]);
 			self.has_part_arkon = false;
