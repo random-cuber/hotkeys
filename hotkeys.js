@@ -174,7 +174,9 @@ function plugin_hotkeys() {
 					apply_list('frame-load', func_mapa, target);
 				});
 			}
-			// process bind@onload, unbind@immediately
+			// bind/unbind content:old
+			apply_list('frame-exec', func_list, target);
+			// prepare for bind content:new
 			$.each(func_list, function apply_func(_, func) {
 				// binder function convention: "entry_action()"
 				var split = func.split('_');
@@ -186,8 +188,6 @@ function plugin_hotkeys() {
 				} else if (action == 'unbind') {
 					// unregister bind from frame load
 					delete func_mapa[entry];
-					// process unbind immediately
-					apply_item('frame-exec', func, target);
 				} else {
 					self.log('error: func: ' + func, true);
 				}
@@ -604,8 +604,10 @@ function plugin_hotkeys() {
 		var base_keys = self.env('supported_base_keys');
 		var supported_keys = [];
 		$.each(base_keys, function(idx1, key) {
+			key = key.toLowerCase();
 			supported_keys.push(key);
 			$.each(meta_keys, function(idx2, meta) {
+				meta = meta.toLowerCase();
 				supported_keys.push(meta + '+' + key);
 			});
 		});
@@ -1422,9 +1424,16 @@ plugin_hotkeys.prototype.show_changer = function(args) {
 		//
 		});
 
+		inp.on('keyup', function inp_keyup(event) {
+			this.value = this.value.toLowerCase();
+		});
+
 		inp.on('input', function inp_change(event) {
-			var key = inp.val();
-			var is_valid = shortcut_list.indexOf(key) >= 0;
+			var key = inp.val().toLowerCase();
+			var has_valid_key = (shortcut_list.indexOf(key) >= 0);
+			var plugin_key = self.env('plugin_hotkey').toLowerCase();
+			var has_plugin_key = (key === plugin_key);
+			is_valid = has_valid_key && !has_plugin_key;
 			if (is_valid) {
 				inp.css('background-color', '#c1f0c1'); // green
 			} else {
