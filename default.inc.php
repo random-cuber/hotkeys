@@ -24,7 +24,7 @@ $config['plugin.hotkeys.enable_event_order'] = false; // FIXME
 $config['plugin.hotkeys.enable_mapping_cleanup'] = true;
 
 // global plugin dialog access shortcut
-$config['plugin.hotkeys.plugin_hotkey'] = 'f1';
+$config['plugin.hotkeys.plugin_hotkey'] = 'f1'; // lower case
 
 // global plugin icon, choose from assets/fontello
 $config['plugin.hotkeys.plugin_icon_class'] = 'hotkeys-icon-keyboard-black';
@@ -139,6 +139,10 @@ $config['plugin.hotkeys.context_mapa'] = array(
                 'action_list' => array('show', ),
         ),
         
+        'mailboxlist' => array(
+                'focused_mapa' => array('mailboxlist' => true),
+        ) ,
+
         'quicksearchbox' => array(
                 'focused_mapa' => array('quicksearchbox' => true),
         ) ,
@@ -161,6 +165,7 @@ $config['plugin.hotkeys.custom_command_list'] = array(
         'reload', // reload page in browser
         'select:all', // global list selection
         'select:page', // limited page selection
+        '#mailboxlist', // focus/blur mailbox list table
         '#messagelist', // focus/blur message list table
         '#quicksearchbox', // focus/blur type-in search input
         '#messagessearchfilter', // focus/blur message list filter
@@ -271,13 +276,15 @@ $config['plugin.hotkeys.internal_command_list'] = array(
 
 );
 
+// reserved by chromium: [Shift]Ctrl(Q|N|W|T|↹)
+
 // permitted alt/ctrl/shift prefix key combinations
-$config['plugin.hotkeys.supported_meta_keys'] = array(
+$config['plugin.hotkeys.supported_meta_keys'] = array( // lower case
         'alt', 'ctrl', 'shift', 'alt+ctrl', 'alt+shift', 'ctrl+shift',
 );
 
 // permitted base keys, to use as-is and to combine with meta_keys
-$config['plugin.hotkeys.supported_base_keys'] = array(
+$config['plugin.hotkeys.supported_base_keys'] = array( // lower case
         'esc', 'tab', 'space', 'return', 'backspace', 'scroll', 'capslock', 'numlock', 
         'insert', 'home', 'del', 'end', 'pageup', 'pagedown', 'left', 'up', 'right', 'down', 
         'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9', 'f10', 'f11', 'f12', 

@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'hotkeys';
-  src: url('../font/hotkeys.eot?50047915');
-  src: url('../font/hotkeys.eot?50047915#iefix') format('embedded-opentype'),
-       url('../font/hotkeys.woff2?50047915') format('woff2'),
-       url('../font/hotkeys.woff?50047915') format('woff'),
-       url('../font/hotkeys.ttf?50047915') format('truetype'),
-       url('../font/hotkeys.svg?50047915#hotkeys') format('svg');
+  src: url('../font/hotkeys.eot?32259264');
+  src: url('../font/hotkeys.eot?32259264#iefix') format('embedded-opentype'),
+       url('../font/hotkeys.woff2?32259264') format('woff2'),
+       url('../font/hotkeys.woff?32259264') format('woff'),
+       url('../font/hotkeys.ttf?32259264') format('truetype'),
+       url('../font/hotkeys.svg?32259264#hotkeys') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -15,7 +15,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'hotkeys';
-    src: url('../font/hotkeys.svg?50047915#hotkeys') format('svg');
+    src: url('../font/hotkeys.svg?32259264#hotkeys') format('svg');
   }
 }
 */

@@ -12,7 +12,7 @@
         "profile": "andrei.pozolotin",
         "command": "plugin.contextmenu_folder.folder_create",
         "context": "mail_any",
-        "comment": "create sub folder from current mailbox",
+        "comment": "mailbox: create sub folder from current folder",
         "script": "",
         "key": "f7",
         "source": "external"
@@ -21,7 +21,7 @@
         "profile": "andrei.pozolotin",
         "command": "plugin.contextmenu_folder.folder_delete",
         "context": "mail_any",
-        "comment": "delete currently selected mailbox",
+        "comment": "mailbox: delete currently selected folder",
         "script": "",
         "key": "f8",
         "source": "external"
@@ -30,7 +30,7 @@
         "profile": "andrei.pozolotin",
         "command": "plugin.contextmenu_folder.folder_locate",
         "context": "mail_any",
-        "comment": "select mailbox by quick search",
+        "comment": "mailbox: select folder by quick search",
         "script": "",
         "key": "f3",
         "source": "external"
@@ -39,18 +39,9 @@
         "profile": "andrei.pozolotin",
         "command": "plugin.contextmenu_folder.folder_rename",
         "context": "mail_any",
-        "comment": "rename currently selected mailbox",
+        "comment": "mailbox: rename currently selected",
         "script": "",
         "key": "f2",
-        "source": "external"
-    },
-    {
-        "profile": "andrei.pozolotin",
-        "command": "plugin.contextmenu_folder.folder_tree_read",
-        "context": "mail_any",
-        "comment": "mark read current mailbox and its descendants",
-        "script": "",
-        "key": "alt+shift+f9",
         "source": "external"
     },
     {
@@ -59,25 +50,25 @@
         "context": "mail_any",
         "comment": "mailbox: mark as read selected folder",
         "script": "",
-        "key": "alt+f9",
+        "key": "---",
         "source": "external"
     },
     {
         "profile": "andrei.pozolotin",
         "command": "reply",
         "context": "mail_any",
-        "comment": "reply to single address",
+        "comment": "message: reply to single address",
         "script": "",
-        "key": "ctrl+r",
+        "key": "alt+r",
         "source": "internal"
     },
     {
         "profile": "andrei.pozolotin",
         "command": "reply-all",
         "context": "mail_any",
-        "comment": "reply to multiple addresses",
+        "comment": "message: reply to multiple addresses",
         "script": "",
-        "key": "ctrl+shift+r",
+        "key": "alt+shift+r",
         "source": "internal"
     },
     {
@@ -120,16 +111,16 @@
         "profile": "andrei.pozolotin",
         "command": "expand-all",
         "context": "mail_any",
-        "comment": "threads: expand all messages",
+        "comment": "message threads: expand all messages",
         "script": "",
-        "key": "alt+a",
+        "key": "alt+e",
         "source": "internal"
     },
     {
         "profile": "andrei.pozolotin",
         "command": "expand-unread",
         "context": "mail_any",
-        "comment": "threads: expand unread messages",
+        "comment": "message threads: expand unread messages",
         "script": "",
         "key": "alt+u",
         "source": "internal"
@@ -138,7 +129,7 @@
         "profile": "andrei.pozolotin",
         "command": "collapse-all",
         "context": "mail_any",
-        "comment": "threads: collapse all messages",
+        "comment": "message threads: collapse all messages",
         "script": "",
         "key": "alt+c",
         "source": "internal"
@@ -149,7 +140,7 @@
         "context": "mail_any",
         "comment": "message: mark selected as junk",
         "script": "",
-        "key": "ctrl+j",
+        "key": "alt+j",
         "source": "external"
     },
     {
@@ -194,7 +185,7 @@
         "context": "mail_list",
         "comment": "message: select all in the mailbox",
         "script": "rcmail.command(command, '');",
-        "key": "ctrl+a",
+        "key": "alt+a",
         "source": "internal"
     },
     {
@@ -210,7 +201,7 @@
         "profile": "andrei.pozolotin",
         "command": "plugin.contextmenu_folder.show_all",
         "context": "mail_any",
-        "comment": "folder: show all",
+        "comment": "mailbox: show all",
         "script": "",
         "key": "alt+1",
         "source": "external"
@@ -219,7 +210,7 @@
         "profile": "andrei.pozolotin",
         "command": "plugin.contextmenu_folder.show_active",
         "context": "mail_any",
-        "comment": "folder: show active",
+        "comment": "mailbox: show active",
         "script": "",
         "key": "alt+2",
         "source": "external"
@@ -228,7 +219,7 @@
         "profile": "andrei.pozolotin",
         "command": "plugin.contextmenu_folder.show_favorite",
         "context": "mail_any",
-        "comment": "folder: show favorite",
+        "comment": "mailbox: show favorite",
         "script": "",
         "key": "alt+3",
         "source": "external"
@@ -237,7 +228,7 @@
         "profile": "andrei.pozolotin",
         "command": "plugin.contextmenu_folder.reset_selected",
         "context": "mail_any",
-        "comment": "folder: reset selected",
+        "comment": "mailbox: empty 'selected' collection",
         "script": "",
         "key": "alt+4",
         "source": "external"
@@ -246,7 +237,7 @@
         "profile": "andrei.pozolotin",
         "command": "plugin.contextmenu_folder.reset_transient",
         "context": "mail_any",
-        "comment": "folder: reset transient",
+        "comment": "mailbox: empty 'transient' collection",
         "script": "",
         "key": "alt+5",
         "source": "external"
@@ -273,7 +264,7 @@
         "profile": "andrei.pozolotin",
         "command": "plugin.contextmenu_folder.contact_folder_create",
         "context": "mail_any",
-        "comment": "create mailbox from selected message headers",
+        "comment": "mailbox: create mailbox from message headers",
         "script": "",
         "key": "f4",
         "source": "external"
@@ -468,7 +459,60 @@
         "context": "mail_list",
         "comment": "message: compose new",
         "script": "",
-        "key": "ctrl+n",
+        "key": "alt+n",
         "source": "internal"
+    },
+    {
+        "profile": "user",
+        "context": "any",
+        "command": "test",
+        "comment": "test entry 1",
+        "script": "alert(\"test 1\");",
+        "key": "ctrl+alt+1"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "plugin.contextmenu_folder.folder_select",
+        "context": "mail_any",
+        "comment": "mailbox: append into 'selected' collection",
+        "script": "",
+        "key": "alt+6",
+        "source": "external"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "plugin.contextmenu_folder.folder_unselect",
+        "context": "mail_any",
+        "comment": "mailbox: remove from 'selected' collection",
+        "script": "",
+        "key": "alt+7",
+        "source": "external"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "plugin.contextmenu_folder.folder_read_tree",
+        "context": "mail_any",
+        "comment": "mailbox: mark read current and its descendants",
+        "script": "",
+        "key": "alt+f9",
+        "source": "external"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "plugin.contextmenu_folder.folder_read_this",
+        "context": "mail_any",
+        "comment": "mailbox: mark read current folder",
+        "script": "",
+        "key": "f9",
+        "source": "external"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "select:all",
+        "context": "mail_list",
+        "comment": "message: select all in the mailbox",
+        "script": "rcmail.command('select-all','');",
+        "key": "ctrl+a",
+        "source": "custom"
     }
 ]

@@ -1958,6 +1958,9 @@ plugin_hotkeys.prototype.show_share = function(args) {
 // plugin instance
 if (rcmail) {
 	rcmail.addEventListener('init', function instance(param) {
+		if (rcmail.is_framed()) {
+			return;
+		}
 		plugin_hotkeys.instance = new plugin_hotkeys();
 	});
 }
