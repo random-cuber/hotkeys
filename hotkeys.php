@@ -24,6 +24,7 @@ class hotkeys extends rcube_plugin {
         $this->provide_config_default();
         
         $this->add_hook('config_get', array($this, 'hook_config_get'));
+        $this->add_hook('html_editor', array($this, 'hook_html_editor'));
         $this->add_hook('preferences_update', array($this, 'hook_preferences_update'));
         
         $this->register_action($this->key('action_upload'), array($this, 'action_upload'));
@@ -32,6 +33,7 @@ class hotkeys extends rcube_plugin {
             $this->rc->output->include_script('list.js'); // global
             $this->include_script('assets/hotkeys/jquery.hotkeys.js');
             $this->include_script('hotkeys.js');
+            $this->include_script('tinymce.js');
             $this->include_stylesheet( 'assets/fontello/css/hotkeys.css');
             $this->include_stylesheet( 'skins' . '/style.css');
             $this->include_stylesheet($this->local_skin_path() . '/style.css');
@@ -178,9 +180,14 @@ class hotkeys extends rcube_plugin {
        }
     }
     
+    //
+    function is_plugin_active() {
+        return $this->config_get('activate_plugin');
+    }
+    
     // optional button
     function provide_toolbar_button() {
-        $activate_plugin = $this->config_get('activate_plugin');
+        $activate_plugin = $this->is_plugin_active();
         $enable_button = $this->config_get('enable_button');
         $plugin_icon_class = $this->config_get('plugin_icon_class');
         if($activate_plugin && $enable_button) {
@@ -195,6 +202,12 @@ class hotkeys extends rcube_plugin {
                 'innerclass' => 'button-inner plugin_hotkeys_button_inner ' . $plugin_icon_class, 
             ),'toolbar');
         }
+    }
+    
+    // provide editor plugins, see ./tinymce.js
+    function hook_html_editor($args) {
+        $args['extra_plugins'][] = 'plugin.hotkeys'; // sync name to *.js
+        return $args;
     }
     
     // inject plugin default config
@@ -420,7 +433,7 @@ class hotkeys extends rcube_plugin {
             $blocks = & $args['blocks'];
             $section = $this->key('section'); // css
             $blocks[$section] = array(); $entry = & $blocks[$section];
-            $entry['name'] = $this->quoted('hotkeys');
+            $entry['name'] = $this->quoted('plugin_hotkeys');
             foreach($this->settings_checkbox_list() as $name) {
                 $this->build_checkbox($entry, $name);
             }

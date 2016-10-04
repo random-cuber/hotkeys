@@ -26,7 +26,11 @@ function plugin_hotkeys() {
 		if (self.env('enable_logging') || force) {
 			var name = arguments.callee.caller.name;
 			var entry = self.key(name);
-			rcmail.log(entry + ': ' + text);
+			if (console && console.log) {
+				// red/blue
+				var color = force ? 'color: #8B0000' : 'color: #000080';
+				console.log('%c' + entry + ': ' + text, color);
+			}
 		}
 	};
 
@@ -117,13 +121,32 @@ function plugin_hotkeys() {
 		$.hotkeys.options.filterInputAcceptingElements = filter_input;
 	}
 
+	// from inside the editor frame see ./tinymce.js
+	this.tinymce_bind = function tinymce_bind(target) {
+		self.log('...');
+		self.plugin_bind(target);
+		self.profile_bind(target);
+	}
+
+	// from inside the editor frame see ./tinymce.js
+	this.tinymce_unbind = function tinymce_unbind(target) {
+		self.log('...');
+		self.plugin_unbind(target);
+		self.profile_unbind(target);
+	}
+
+	//
+	this.is_plugin_active = function is_plugin_active() {
+		return self.env('activate_plugin');
+	}
+
 	// plugin on load setup
 	this.initialize = function initialize() {
 
-		if (self.env('activate_plugin')) {
-			self.log('enabled');
+		if (self.is_plugin_active()) {
+			self.log('active');
 		} else {
-			self.log('disabled');
+			self.log('inactive');
 			return;
 		}
 
@@ -161,8 +184,12 @@ function plugin_hotkeys() {
 		//
 		apply_list('root', func_list, document);
 		//
-		$('iframe').each(function() {
+		function apply_frame() {
 			var frame = this; // content:old
+			if ($(frame).is(':hidden')) {
+				self.log('hidden: ' + self.identity(frame));
+				return;
+			}
 			var target = frame.contentWindow.document;
 			// setup frame load handler
 			if (!$(frame).data(key_has_load)) {
@@ -193,12 +220,35 @@ function plugin_hotkeys() {
 				}
 				$(frame).data(key_func_mapa, func_mapa);
 			});
+		}
+		// static frames
+		$('iframe').each(apply_frame);
+		// dynamic frames - so far not used
+		$(document).on('DOMNodeInserted', function apply_insert(event) {
+			var node_name = event.target.nodeName.toLowerCase();
+			if (node_name == 'iframe') {
+				var frame = event.target;
+				self.log(frame.id);
+			}
+		});
+		$(document).on('DOMNodeRemoved', function apply_remove(event) {
+			var node_name = event.target.nodeName.toLowerCase();
+			if (node_name == 'iframe') {
+				var frame = event.target;
+				self.log(frame.id);
+			}
 		});
 	}
 
 	// expose plugin command
 	this.register_command = function(name) {
-		rcmail.register_command(self.key(name), self[name].bind(self), true);
+		var command = self.key(name);
+		var compose_commands = rcmail.env.compose_commands;
+		if (compose_commands) {
+			// for compose toolbar validator
+			compose_commands.push(command);
+		}
+		rcmail.register_command(command, self[name].bind(self), true);
 	}
 
 	// persist user settings on client and server
@@ -212,16 +262,39 @@ function plugin_hotkeys() {
 		self.log(key + '=' + (no_dump ? '...' : self.json_encode(value)));
 	}
 
+	// debug
+	this.identity = function identity(target) {
+		var node = target.nodeName.toLowerCase();
+		if (target.id) {
+			return node + '/' + target.id;
+		}
+		if (target.name) {
+			return node + '/' + target.name;
+		}
+		if (target.class) {
+			return node + '/' + target.class;
+		}
+		if (node == '#document') {
+			var window = target.defaultView;
+			if (window) {
+				return '/' + window.name + '/' + node;
+			} else {
+				return 'root' + '/' + node;
+			}
+		}
+		return node;
+	}
+
 	// activate keyboard shortcut handler
 	this.perform_bind = function perform_bind(target, keys, handler) {
-		self.log('title: ' + target_title(target));
+		self.log(self.identity(target));
 		$(target).bind('keydown', keys, handler);
 		self.event_order(keys);
 	}
 
 	// deactivate keyboard shortcut handler
 	this.perform_unbind = function perform_unbind(target, handler) {
-		self.log('title: ' + target_title(target));
+		self.log(self.identity(target));
 		$(target).unbind('keydown', handler);
 	}
 
@@ -303,16 +376,18 @@ function plugin_hotkeys() {
 		return map;
 	}
 
+	// jquery data key
+	function mapping_key() {
+		return self.key('profile_mapping');
+	}
+
 	// activate keyboard shortcut handler
 	this.profile_bind = function profile_bind(target) {
 		var profile = self.profile_get();
+		self.log('profile: ' + profile);
 		var mapping_list = self.mapping_list(profile);
-		var mapping_size = mapping_list.length;
-		self.log('profile: ' + profile + ': ' + mapping_size);
-		if (mapping_size == 0) {
-			return;
-		}
-		self.profile_mapping = self.build_mapping(mapping_list);
+		var profile_mapping = self.build_mapping(mapping_list);
+		$(target).data(mapping_key(), profile_mapping);
 		var keys = self.array_column(mapping_list, 'key').join(" ");
 		self.perform_bind(target, keys, self.profile_handler);
 	}
@@ -321,15 +396,16 @@ function plugin_hotkeys() {
 	this.profile_unbind = function profile_unbind(target) {
 		var profile = self.profile_get();
 		self.log('profile: ' + profile);
-		// self.log('stack: ' + (new Error()).stack); XXX
 		self.perform_unbind(target, self.profile_handler);
-		self.profile_mapping = {};
+		$(target).data(mapping_key(), {});
 	}
 
 	// profile command invoker
 	this.profile_handler = function profile_handler(event, key) {
 		self.log('key: ' + key);
-		var mapping_list = self.profile_mapping[key];
+		var target = event.currentTarget;
+		var profile_mapping = $(target).data(mapping_key());
+		var mapping_list = profile_mapping[key];
 		$.each(mapping_list, function(_, mapping) {
 			self.execute(mapping, event);
 		});
@@ -1956,11 +2032,8 @@ plugin_hotkeys.prototype.show_share = function(args) {
 }
 
 // plugin instance
-if (rcmail) {
+if (window.rcmail && !rcmail.is_framed()) {
 	rcmail.addEventListener('init', function instance(param) {
-		if (rcmail.is_framed()) {
-			return;
-		}
 		plugin_hotkeys.instance = new plugin_hotkeys();
 	});
 }

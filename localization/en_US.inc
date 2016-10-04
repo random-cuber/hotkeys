@@ -2,6 +2,8 @@
 
 $labels = array();
 
+$labels['plugin_hotkeys'] = 'Plugin: Hot Keys';
+
 $labels['hotkeys'] = 'Hot Keys';
 $labels['activate_plugin'] = 'Activate plugin';
 $labels['enable_logging'] = 'Enable plugin logging';

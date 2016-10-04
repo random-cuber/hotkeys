@@ -116,6 +116,7 @@ $config['plugin.hotkeys.context_mapa'] = array(
         'mail_edit' => array(
                 'task_list' => array('mail', ),
                 'action_list' => array('compose', ),
+                // 'target_name_mapa' => array( 'textarea' => false,  ),
         ),
         'mail_view' => array(
                 'task_list' => array('mail', ),
