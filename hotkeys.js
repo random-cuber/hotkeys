@@ -121,20 +121,6 @@ function plugin_hotkeys() {
 		$.hotkeys.options.filterInputAcceptingElements = filter_input;
 	}
 
-	// from inside the editor frame see ./tinymce.js
-	this.tinymce_bind = function tinymce_bind(target) {
-		self.log('...');
-		self.plugin_bind(target);
-		self.profile_bind(target);
-	}
-
-	// from inside the editor frame see ./tinymce.js
-	this.tinymce_unbind = function tinymce_unbind(target) {
-		self.log('...');
-		self.plugin_unbind(target);
-		self.profile_unbind(target);
-	}
-
 	//
 	this.is_plugin_active = function is_plugin_active() {
 		return self.env('activate_plugin');
@@ -223,21 +209,6 @@ function plugin_hotkeys() {
 		}
 		// static frames
 		$('iframe').each(apply_frame);
-		// dynamic frames - so far not used
-		$(document).on('DOMNodeInserted', function apply_insert(event) {
-			var node_name = event.target.nodeName.toLowerCase();
-			if (node_name == 'iframe') {
-				var frame = event.target;
-				self.log(frame.id);
-			}
-		});
-		$(document).on('DOMNodeRemoved', function apply_remove(event) {
-			var node_name = event.target.nodeName.toLowerCase();
-			if (node_name == 'iframe') {
-				var frame = event.target;
-				self.log(frame.id);
-			}
-		});
 	}
 
 	// expose plugin command
@@ -286,29 +257,27 @@ function plugin_hotkeys() {
 	}
 
 	// activate keyboard shortcut handler
-	this.perform_bind = function perform_bind(target, keys, handler) {
-		self.log(self.identity(target));
+	this.perform_bind = function perform_bind(title, target, keys, handler) {
+		self.log(title + '->' + self.identity(target));
 		$(target).bind('keydown', keys, handler);
 		self.event_order(keys);
 	}
 
 	// deactivate keyboard shortcut handler
-	this.perform_unbind = function perform_unbind(target, handler) {
-		self.log(self.identity(target));
+	this.perform_unbind = function perform_unbind(title, target, handler) {
+		self.log(title + '->' + self.identity(target));
 		$(target).unbind('keydown', handler);
 	}
 
 	// activate keyboard shortcut handler
 	this.plugin_bind = function plugin_bind(target) {
-		self.log('...');
 		var keys = self.env('plugin_hotkey');
-		self.perform_bind(target, keys, self.plugin_handler);
+		self.perform_bind('plugin', target, keys, self.plugin_handler);
 	}
 
 	// deactivate keyboard shortcut handler
 	this.plugin_unbind = function plugin_unbind(target) {
-		self.log('...');
-		self.perform_unbind(target, self.plugin_handler);
+		self.perform_unbind('plugin', target, self.plugin_handler);
 	}
 
 	// plugin access hot key
@@ -384,20 +353,20 @@ function plugin_hotkeys() {
 	// activate keyboard shortcut handler
 	this.profile_bind = function profile_bind(target) {
 		var profile = self.profile_get();
-		self.log('profile: ' + profile);
 		var mapping_list = self.mapping_list(profile);
 		var profile_mapping = self.build_mapping(mapping_list);
 		$(target).data(mapping_key(), profile_mapping);
 		var keys = self.array_column(mapping_list, 'key').join(" ");
-		self.perform_bind(target, keys, self.profile_handler);
+		var title = 'profile[' + profile + ']';
+		self.perform_bind(title, target, keys, self.profile_handler);
 	}
 
 	// deactivate keyboard shortcut handler
 	this.profile_unbind = function profile_unbind(target) {
 		var profile = self.profile_get();
-		self.log('profile: ' + profile);
-		self.perform_unbind(target, self.profile_handler);
 		$(target).data(mapping_key(), {});
+		var title = 'profile[' + profile + ']';
+		self.perform_unbind(title, target, self.profile_handler);
 	}
 
 	// profile command invoker
@@ -2033,7 +2002,65 @@ plugin_hotkeys.prototype.show_share = function(args) {
 
 // plugin instance
 if (window.rcmail && !rcmail.is_framed()) {
+
 	rcmail.addEventListener('init', function instance(param) {
 		plugin_hotkeys.instance = new plugin_hotkeys();
 	});
+
+}
+
+// plugin for tinymce
+if (window.tinymce) {
+
+	// provide key bind/unbind from inside the editor frame
+	tinymce.PluginManager.add('plugin.hotkeys', // sync name to *.php
+	function editor_setup(editor, url) {
+
+		// bind
+		function editor_create(event) {
+			// console.log(event);
+			var frame = event.target; // wrapper
+			target = frame.contentDocument.activeElement;
+			if (target) {
+				instance.log('...');
+				instance.plugin_bind(target);
+				instance.profile_bind(target);
+			} else {
+				instance.log('invalid target', true);
+			}
+		}
+
+		// unbind
+		function editor_delete(event) {
+			// console.log(event);
+			if (target) {
+				instance.log('...');
+				instance.plugin_unbind(target);
+				instance.profile_unbind(target);
+			} else {
+				instance.log('invalid target', true);
+			}
+		}
+
+		// verify
+		function editor_keydown(event) {
+			// console.log(event);
+		}
+
+		// plugin proper
+		var instance = plugin_hotkeys.instance;
+
+		// editor event origin
+		var target = null;
+
+		// activate
+		if (instance && instance.is_plugin_active()) {
+			instance.log('...');
+			editor.on('init', editor_create);
+			editor.on('remove', editor_delete);
+			// editor.on('keydown', editor_keydown);
+		}
+
+	});
+
 }

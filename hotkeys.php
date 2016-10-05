@@ -6,11 +6,12 @@
 
 class hotkeys extends rcube_plugin {
 
-    public $task = '.*'; // supported tasks regex filter
-    public $allowed_prefs = array(); // see: rcube_plugin->$allowed_prefs
     private $config_default = array(); // default plugin configuration
     private $rc; // controller singleton
 
+    public $task = '.*'; // supported tasks regex filter
+    public $allowed_prefs = array(); // see: rcube_plugin->$allowed_prefs
+    
     // early instace init
     function onload() {
         $this->provide_allowed_prefs();
@@ -21,10 +22,11 @@ class hotkeys extends rcube_plugin {
         $this->require_plugin('jqueryui');
         $this->rc = rcmail::get_instance();
         
-        $this->provide_config_default();
-        
+        $this->init_config();
         $this->add_hook('config_get', array($this, 'hook_config_get'));
         $this->add_hook('html_editor', array($this, 'hook_html_editor'));
+        $this->add_hook('preferences_list', array($this, 'hook_preferences_list'));
+        $this->add_hook('preferences_save', array($this, 'hook_preferences_save'));
         $this->add_hook('preferences_update', array($this, 'hook_preferences_update'));
         
         $this->register_action($this->key('action_upload'), array($this, 'action_upload'));
@@ -33,7 +35,6 @@ class hotkeys extends rcube_plugin {
             $this->rc->output->include_script('list.js'); // global
             $this->include_script('assets/hotkeys/jquery.hotkeys.js');
             $this->include_script('hotkeys.js');
-            $this->include_script('tinymce.js');
             $this->include_stylesheet( 'assets/fontello/css/hotkeys.css');
             $this->include_stylesheet( 'skins' . '/style.css');
             $this->include_stylesheet($this->local_skin_path() . '/style.css');
@@ -43,15 +44,6 @@ class hotkeys extends rcube_plugin {
             $this->provide_client_env_var(); // keep last
         }
 
-        if($this->rc->task == 'mail') {
-            //
-        }
-
-        if($this->rc->task == 'settings') {
-            $this->add_hook('preferences_list', array($this, 'hook_preferences_list'));
-            $this->add_hook('preferences_save', array($this, 'hook_preferences_save'));
-        }
-        
     }
     
     ////////////////////////////
@@ -104,7 +96,7 @@ class hotkeys extends rcube_plugin {
     }
     
     // load plugin default configuration file
-    function provide_config_default($name = 'default.inc.php') {
+    function init_config($name = 'default.inc.php') {
         $config = null;
         $path = $this->home . '/' . $name;
         if ($path && is_file($path) && is_readable($path)) {
@@ -204,7 +196,7 @@ class hotkeys extends rcube_plugin {
         }
     }
     
-    // provide editor plugins, see ./tinymce.js
+    // provide tinymce plugins
     function hook_html_editor($args) {
         $args['extra_plugins'][] = 'plugin.hotkeys'; // sync name to *.js
         return $args;
