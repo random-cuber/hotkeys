@@ -8,6 +8,7 @@ $labels['hotkeys'] = 'Hot Keys';
 $labels['activate_plugin'] = 'Activate plugin';
 $labels['enable_logging'] = 'Enable plugin logging';
 $labels['enable_button'] = 'Enable toolbar button';
+$labels['enable_prevent'] = 'Prevent default browser keys';
 $labels['plugin_hotkey'] = 'Plugin access key';
 $labels['reset_to_default'] = 'Reset mappings to default';
 
@@ -73,5 +74,6 @@ $labels['custom_command_list'] = 'Custom command list';
 $labels['internal_command_list'] = 'Internal command list';
 $labels['supported_base_keys'] = 'Supported base keys';
 $labels['supported_meta_keys'] = 'Supported meta keys';
+$labels['prevent_default_keys'] = 'Prevented browser keys list';
 
 ?>

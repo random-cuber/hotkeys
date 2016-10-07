@@ -55,24 +55,6 @@
     },
     {
         "profile": "andrei.pozolotin",
-        "command": "reply",
-        "context": "mail_any",
-        "comment": "message: reply to single address",
-        "script": "",
-        "key": "alt+r",
-        "source": "internal"
-    },
-    {
-        "profile": "andrei.pozolotin",
-        "command": "reply-all",
-        "context": "mail_any",
-        "comment": "message: reply to multiple addresses",
-        "script": "",
-        "key": "alt+shift+r",
-        "source": "internal"
-    },
-    {
-        "profile": "andrei.pozolotin",
         "command": "about",
         "context": "mail_any",
         "comment": "plugins: show active",
@@ -109,42 +91,6 @@
     },
     {
         "profile": "andrei.pozolotin",
-        "command": "expand-all",
-        "context": "mail_any",
-        "comment": "message threads: expand all messages",
-        "script": "",
-        "key": "alt+e",
-        "source": "internal"
-    },
-    {
-        "profile": "andrei.pozolotin",
-        "command": "expand-unread",
-        "context": "mail_any",
-        "comment": "message threads: expand unread messages",
-        "script": "",
-        "key": "alt+u",
-        "source": "internal"
-    },
-    {
-        "profile": "andrei.pozolotin",
-        "command": "collapse-all",
-        "context": "mail_any",
-        "comment": "message threads: collapse all messages",
-        "script": "",
-        "key": "alt+c",
-        "source": "internal"
-    },
-    {
-        "profile": "andrei.pozolotin",
-        "command": "plugin.markasjunk",
-        "context": "mail_any",
-        "comment": "message: mark selected as junk",
-        "script": "",
-        "key": "alt+j",
-        "source": "external"
-    },
-    {
-        "profile": "andrei.pozolotin",
         "command": "#quicksearchbox",
         "context": "mail_list",
         "comment": "focus: enter search input",
@@ -175,8 +121,8 @@
         "command": "#messagessearchfilter",
         "context": "mail_list",
         "comment": "focus: enter filter select",
-        "script": "$(command).focus();",
-        "key": "ctrl+s",
+        "script": "$(command).focus().select();",
+        "key": "alt+f",
         "source": "custom"
     },
     {
@@ -449,7 +395,7 @@
         "command": "#messagelist",
         "context": "mail_any",
         "comment": "focus: enter message list",
-        "script": "$(command).focus();",
+        "script": "$('select').blur(); $(command).focus();",
         "key": "ctrl+l",
         "source": "custom"
     },
@@ -468,7 +414,8 @@
         "command": "test",
         "comment": "test entry 1",
         "script": "alert(\"test 1\");",
-        "key": "ctrl+alt+1"
+        "key": "ctrl+alt+1",
+        "source": "custom"
     },
     {
         "profile": "andrei.pozolotin",
@@ -514,5 +461,104 @@
         "script": "rcmail.command('select-all','');",
         "key": "ctrl+a",
         "source": "custom"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "savedraft",
+        "context": "mail_edit",
+        "comment": "compose: save draft",
+        "script": "",
+        "key": "ctrl+s",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "edit:html",
+        "context": "mail_edit",
+        "comment": "compose: switch editor to html",
+        "script": "$('[name=editorSelector]').val('html').trigger('change');",
+        "key": "alt+h",
+        "source": "custom"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "edit:text",
+        "context": "mail_edit",
+        "comment": "compose: switch editor to text",
+        "script": "$('[name=editorSelector]').val('plain').trigger('change');",
+        "key": "alt+t",
+        "source": "custom"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "list",
+        "context": "mail_edit",
+        "comment": "compose: return to message list",
+        "script": "",
+        "key": "ctrl+l",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "send",
+        "context": "mail_edit",
+        "comment": "compose: send mail",
+        "script": "rcmail.command('send', {});",
+        "key": "ctrl+shift+s",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "expand-all",
+        "context": "mail_list",
+        "comment": "message threads: expand all messages",
+        "script": "",
+        "key": "alt+e",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "expand-unread",
+        "context": "mail_list",
+        "comment": "message threads: expand unread messages",
+        "script": "",
+        "key": "alt+u",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "collapse-all",
+        "context": "mail_list",
+        "comment": "message threads: collapse all messages",
+        "script": "",
+        "key": "alt+c",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "reply",
+        "context": "mail_list",
+        "comment": "message: reply to single address",
+        "script": "",
+        "key": "ctrl+r",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "reply-all",
+        "context": "mail_list",
+        "comment": "message: reply to multiple addresses",
+        "script": "",
+        "key": "alt+shift+r",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "plugin.markasjunk",
+        "context": "mail_list",
+        "comment": "message: mark selected as junk",
+        "script": "",
+        "key": "ctrl+j",
+        "source": "external"
     }
 ]

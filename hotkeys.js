@@ -41,13 +41,13 @@ function plugin_hotkeys() {
 
 	// mapping table fields
 	this.field_list = function() {
-		return [ 'profile', 'command', 'context', 'key', 'comment', 'source' ];
+		return [ 'profile', 'command', 'context', 'comment', 'key', 'source', ]; // 'script'
 	}
 
 	// mapping table filters
 	this.filter_list = function() {
 		return [ 'all', 'active', 'passive', 'custom', 'internal', 'external',
-				'undefined', 'scripted' ];
+				'undefined', ]; // 'scripted'
 	}
 
 	// locate internal jquery event handler
@@ -298,7 +298,7 @@ function plugin_hotkeys() {
 			self.log('work: open');
 			self.show_arkon();
 		}
-		return false; // event stop
+		return false; // #event stop/prevent
 	}
 
 	// current profile
@@ -371,60 +371,106 @@ function plugin_hotkeys() {
 
 	// profile command invoker
 	this.profile_handler = function profile_handler(event, key) {
-		self.log('key: ' + key);
 		var target = event.currentTarget;
 		var profile_mapping = $(target).data(mapping_key());
 		var mapping_list = profile_mapping[key];
+		self.log('key: ' + key + ' list: ' + mapping_list.length);
+		var has_match = false; // on any mapping
 		$.each(mapping_list, function(_, mapping) {
-			self.execute(mapping, event);
+			var context = mapping.context;
+			if (self.match_context(context, event)) {
+				has_match = true;
+				self.execute(mapping);
+			}
 		});
-		return false; // event stop
+		if (!has_match && self.env('enable_prevent')) {
+			var prevent_keys = self.env('prevent_default_keys') || [];
+			if (prevent_keys.indexOf(key) >= 0) {
+				self.log('prevent deafult');
+				event.preventDefault();
+			}
+		}
+		return !has_match; // #event continue on mismatch
 	}
 
-	// list filter
-	function match_list(list, item) {
-		// empty matches any
-		return list.length == 0 || list.indexOf(item) >= 0;
+	// task filter
+	function match_task(list, item) {
+		var report = 'no match';
+		try {
+			if (list.length == 0) {
+				report = 'has match: (empty)';
+				return true;
+			}
+			if (list.indexOf(item) >= 0) {
+				report = 'has match: [' + item + ']';
+				return true;
+			}
+			return false;
+		} finally {
+			self.log(report)
+		}
+	}
+
+	// action filter
+	function match_action(list, item) {
+		var report = 'no match';
+		try {
+			if (list.length == 0) {
+				report = 'has match: (empty)';
+				return true;
+			}
+			if (list.indexOf(item) >= 0) {
+				report = 'has match: [' + item + ']';
+				return true;
+			}
+			return false;
+		} finally {
+			self.log(report)
+		}
 	}
 
 	// focus filter
 	function match_focused(list) {
-		// empty matches any
-		if (list.length == 0) {
-			return true;
+		var report = 'no match';
+		try {
+			if (list.length == 0) {
+				report = 'has match: (empty)';
+				return true;
+			}
+			var match = false;
+			$.each(list, function(id, present) {
+				var has_focus = self.html_by_id(id).is(":focus");
+				match = present ? has_focus : !has_focus;
+				report = 'id=' + id + ' present=' + present;
+				return false; // break
+			});
+			return match;
+		} finally {
+			self.log(report);
 		}
-		var match;
-		$.each(list, function match_focused(id, present) {
-			var has_focus = self.html_by_id(id).is(":focus");
-			match = present ? has_focus : !has_focus;
-			self.log('id=' + id + '' + ' has_focus=' + has_focus + ' match='
-					+ match);
-			return false; // break
-		});
-		return match;
 	}
 
 	// event target filter
 	function match_target_name(list, event) {
-		// empty matches any
-		if (list.length == 0) {
-			return true;
+		var report = 'no match';
+		try {
+			if (list.length == 0) {
+				report = 'has match: (empty)';
+				return true;
+			}
+			var match = false;
+			var node_name = event.target.nodeName.toLowerCase();
+			$.each(list, function match_target_name(name, present) {
+				var rx = new RegExp(name, 'i');
+				var has_name = rx.test(node_name);
+				match = present ? has_name : !has_name;
+				report = 'node=' + node_name + ' present=' + present;
+				return false; // break
+			});
+			return match;
+		} finally {
+			self.log(report);
 		}
-		var match, node_name = event.target.nodeName;
-		$.each(list, function match_target_name(name, present) {
-			var rx = new RegExp(name, 'i');
-			var has_name = rx.test(node_name);
-			match = present ? has_name : !has_name;
-			self.log('name=' + name + '' + ' node_name=' + node_name
-					+ ' match=' + match);
-			return false; // break
-		});
-		return match;
-	}
-
-	// short representation for boolean
-	function char(bool) {
-		return bool ? '+' : '-';
 	}
 
 	// verify current execution context
@@ -432,65 +478,67 @@ function plugin_hotkeys() {
 
 		var task = rcmail.env.task;
 		var action = rcmail.env.action;
-		self.log('task=[' + task + '] action=[' + action + ']');
 
 		var context_mapa = self.env('context_mapa');
 		var context = context_mapa[name] || {};
-		self.log(name + '=' + self.json_encode(context, 4));
 
 		var task_list = context.task_list || [];
 		var action_list = context.action_list || [];
 		var focused_mapa = context.focused_mapa || [];
 		var target_name_mapa = context.target_name_mapa || [];
 
-		var has_task = match_list(task_list, task);
-		var has_action = match_list(action_list, action);
+		var has_task = match_task(task_list, task);
+		var has_action = match_action(action_list, action);
 		var has_focused = match_focused(focused_mapa);
 		var has_target_name = match_target_name(target_name_mapa, event);
 
-		var has_match = has_task && has_action && has_focused
-				&& has_target_name;
+		var has_match = //
+		has_task && has_action && has_focused && has_target_name;
 
-		var match_mask = char(has_task) + char(has_action) + char(has_focused)
-				+ char(has_target_name);
+		var match_mask = [ //
+		has_task ? 'T' : 't', //
+		has_action ? 'A' : 'a', //
+		has_focused ? 'F' : 'f', //
+		has_target_name ? 'N' : 'n', //
+		].join('-');
 
-		self.log('has_match=' + has_match + ' (' + match_mask + ')');
+		var report = {
+			has_match : has_match,
+			match_mask : match_mask,
+			task : task,
+			action : action,
+			context : name,
+		};
+		report[name] = context;
+
+		self.log(self.json_encode(report, 4));
 
 		return has_match;
 	}
 
 	// invoke command defined by mapping
-	this.execute = function execute(mapping, event, force) {
-		var context = mapping.context;
-		var enable = force || self.match_context(context, event);
-		if (!enable) {
-			return;
-		}
+	this.execute = function execute(mapping) {
 		var command = mapping.command;
-		if (command) {
-			self.log(command);
-			var auto_enable = self.env('command_auto_enable') || false;
-			var was_enabled = rcmail.command_enabled(command) || false;
-			var manage_enabled = auto_enable && !was_enabled;
+		self.log(command);
+		var auto_enable = self.env('command_auto_enable') || false;
+		var was_enabled = rcmail.command_enabled(command) || false;
+		var manage_enabled = auto_enable && !was_enabled;
+		if (manage_enabled) {
+			rcmail.enable_command(command, true);
+		}
+		try {
+			var script = mapping.script;
+			if (script) {
+				self.evaluate(mapping);
+			} else {
+				rcmail.command(command);
+			}
+		} catch (error) {
+			self.log(error.stack, true);
+		} finally {
 			if (manage_enabled) {
-				rcmail.enable_command(command, true);
+				rcmail.enable_command(command, false);
 			}
-			try {
-				var script = mapping.script;
-				if (script) {
-					self.evaluate(mapping);
-				} else {
-					rcmail.command(command);
-				}
-			} catch (e) {
-				self.log('error: ' + e, true);
-			} finally {
-				if (manage_enabled) {
-					rcmail.enable_command(command, false);
-				}
-			}
-		} else {
-			self.log('error: invalid command: ' + command, true);
 		}
 	}
 
@@ -1098,7 +1146,7 @@ plugin_hotkeys.prototype.show_arkon = function(args) {
 			remove();
 			break;
 		case 'invoke':
-			self.execute(mapping_widget.$choice(), null, true);
+			self.execute(mapping_widget.$choice());
 			break;
 		default:
 			self.log('error: ' + id, true);
@@ -1470,7 +1518,11 @@ plugin_hotkeys.prototype.show_changer = function(args) {
 		});
 
 		inp.on('keyup', function inp_keyup(event) {
-			this.value = this.value.toLowerCase();
+			var value = this.value;
+			var lower = value.toLowerCase()
+			if (value != lower) {
+				this.value = lower;
+			}
 		});
 
 		inp.on('input', function inp_change(event) {
@@ -1581,7 +1633,7 @@ plugin_hotkeys.prototype.show_changer = function(args) {
 		id : 'invoke',
 		text : self.localize('invoke'),
 		click : function() {
-			self.execute(result(), null, true);
+			self.execute(result());
 		}
 	}, {
 		id : 'close',
@@ -1645,7 +1697,7 @@ plugin_hotkeys.prototype.show_keyspypad = function(args) {
 		self.log('key: ' + key);
 		args.key = key;
 		self.part_keyspypad.dialog("close");
-		return false; // event stop
+		return false; // #event stop/prevent
 	}
 
 	var buttons = null;

@@ -14,6 +14,9 @@ $config['plugin.hotkeys.enable_logging'] = false;
 // plugin activation toolbar button
 $config['plugin.hotkeys.enable_button'] = true;
 
+// prevent default browser keys
+$config['plugin.hotkeys.enable_prevent'] = true;
+
 // manage command enabelment around invocation
 $config['plugin.hotkeys.command_auto_enable'] = true;
 
@@ -161,9 +164,12 @@ $config['plugin.hotkeys.options_filter_input'] = false;
 
 // user managed commands
 $config['plugin.hotkeys.custom_command_list'] = array(
-        '#', // a place for 'new' 
+        '#', // a place for 'new'
+        'noop', // idle command
         'test', // command testing
         'reload', // reload page in browser
+        'edit:html', // switch editor to html
+        'edit:text', // switch editor to text
         'select:all', // global list selection
         'select:page', // limited page selection
         '#mailboxlist', // focus/blur mailbox list table
@@ -277,24 +283,6 @@ $config['plugin.hotkeys.internal_command_list'] = array(
 
 );
 
-// reserved by chromium: [Shift]Ctrl(Q|N|W|T|↹)
-
-// permitted alt/ctrl/shift prefix key combinations
-$config['plugin.hotkeys.supported_meta_keys'] = array( // lower case
-        'alt', 'ctrl', 'shift', 'alt+ctrl', 'alt+shift', 'ctrl+shift',
-);
-
-// permitted base keys, to use as-is and to combine with meta_keys
-$config['plugin.hotkeys.supported_base_keys'] = array( // lower case
-        'esc', 'tab', 'space', 'return', 'backspace', 'scroll', 'capslock', 'numlock', 
-        'insert', 'home', 'del', 'end', 'pageup', 'pagedown', 'left', 'up', 'right', 'down', 
-        'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9', 'f10', 'f11', 'f12', 
-        '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 
-        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 
-        'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
-        't', 'u', 'v', 'w', 'x', 'y', 'z',
-);
-
 ///////
 
 // expose these settings in user ui
@@ -302,6 +290,7 @@ $config['plugin.hotkeys.settings_checkbox_list'] = array(
         'activate_plugin',
         'enable_logging',
         'enable_button',
+        'enable_prevent',
         // 'options_filter_input',
         'reset_to_default',
 );
@@ -317,12 +306,58 @@ $config['plugin.hotkeys.settings_area_list'] = array(
         // 'internal_command_list',
         'supported_meta_keys',
         // 'supported_base_keys',
+        'prevent_default_keys',
 );
 
 // expose these settings in user ui
 $config['plugin.hotkeys.settings_text_list'] = array(
         'plugin_hotkey',
         // 'plugin_icon_class',
+);
+
+///////////
+
+// can not prevent/re-map:
+
+// reserved by chromium: [Shift]Ctrl(Q|N|W|T|↹|{number}),
+// https://support.google.com/chrome/answer/157179?hl=en
+
+// reserved by firefox: TODO
+
+// reserved by int exp: TODO
+
+// TODO make browser/os dependent
+// disable these default browser actions
+$config['plugin.hotkeys.prevent_default_keys'] = array(
+        'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9', 'f10',
+        'ctrl+h', // history
+        'ctrl+d', // bookmark
+        'ctrl+e', // location
+        'ctrl+k', // location
+        'ctrl+l', // location
+        'ctrl+g', // location
+        'ctrl+j', // download
+        'ctrl+f', // search
+        'ctrl+p', // print
+        'ctrl+s', // save
+        'ctrl+r', // reload
+        'ctrl+u', // view html
+);
+
+// permitted alt/ctrl/shift prefix key combinations
+$config['plugin.hotkeys.supported_meta_keys'] = array( // lower case
+        'alt', 'ctrl', 'shift', 'alt+ctrl', 'alt+shift', 'ctrl+shift',
+);
+
+// permitted base keys, to use as-is and to combine with meta_keys
+$config['plugin.hotkeys.supported_base_keys'] = array( // lower case
+        'esc', 'tab', 'space', 'return', 'backspace', 'scroll', 'capslock', 'numlock', 
+        'insert', 'home', 'del', 'end', 'pageup', 'pagedown', 'left', 'up', 'right', 'down', 
+        'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9', 'f10', 'f11', 'f12', 
+        '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 
+        'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
+        't', 'u', 'v', 'w', 'x', 'y', 'z',
 );
 
 ?>

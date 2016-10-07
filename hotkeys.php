@@ -150,6 +150,7 @@ class hotkeys extends rcube_plugin {
        $name_list = array(
            'activate_plugin', 
            'enable_logging',
+           'enable_prevent',
            'enable_event_order',
            'plugin_hotkey',
            'plugin_icon_class',
@@ -166,6 +167,7 @@ class hotkeys extends rcube_plugin {
            'supported_base_keys',
            'options_filter_input',
            'command_auto_enable',
+           'prevent_default_keys',
        );
        foreach($name_list as $name) {
            $this->set_env($name);
