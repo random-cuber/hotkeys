@@ -7,22 +7,22 @@ function plugin_hotkeys() {
 	var self = this;
 
 	// public command
-	this.activate = function() {
+	this.activate = function activate() {
 		self.show_arkon();
 	}
 
 	// plugin name space
-	this.key = function(name) {
+	this.key = function key(name) {
 		return 'plugin.hotkeys.' + name; // keep in sync with *.php
 	}
 
 	// environment variable
-	this.env = function(name) {
+	this.env = function env(name) {
 		return rcmail.env[self.key(name)];
 	}
 
 	// plugin client logger
-	this.log = function(text, force) {
+	this.log = function log(text, force) {
 		if (self.env('enable_logging') || force) {
 			var name = arguments.callee.caller.name;
 			var entry = self.key(name);
@@ -35,17 +35,17 @@ function plugin_hotkeys() {
 	};
 
 	// provide localization
-	this.localize = function(name) {
+	this.localize = function localize(name) {
 		return rcmail.get_label(name, 'hotkeys');
 	}
 
 	// mapping table fields
-	this.field_list = function() {
-		return [ 'profile', 'command', 'context', 'comment', 'key', 'source', ]; // 'script'
+	this.field_list = function field_list() {
+		return [ 'profile', 'context', 'command', 'comment', 'key', 'source', ]; // 'script'
 	}
 
 	// mapping table filters
-	this.filter_list = function() {
+	this.filter_list = function filter_list() {
 		return [ 'all', 'active', 'passive', 'custom', 'internal', 'external',
 				'undefined', ]; // 'scripted'
 	}
@@ -114,6 +114,12 @@ function plugin_hotkeys() {
 		return $(target).find("title").text();
 	}
 
+	// window which owns the element
+	function element_window(node) {
+		var the_doc = node.ownerDocument ? node.ownerDocument : node;
+		return the_doc.defaultView || the_doc.parentWindow;
+	}
+
 	// https://github.com/jeresig/jquery.hotkeys
 	function jquery_hotkeys_options() {
 		var filter_input = self.env('options_filter_input') || false;
@@ -137,7 +143,7 @@ function plugin_hotkeys() {
 		}
 
 		if (rcmail.env['framed']) {
-			self.log('idle: frame');
+			self.log('error: framed', true);
 			return;
 		}
 
@@ -172,7 +178,7 @@ function plugin_hotkeys() {
 		//
 		function apply_frame() {
 			var frame = this; // content:old
-			if ($(frame).is(':hidden')) {
+			if ($(frame).is(':hidden')) { // ignore
 				self.log('hidden: ' + self.identity(frame));
 				return;
 			}
@@ -246,9 +252,9 @@ function plugin_hotkeys() {
 			return node + '/' + target.class;
 		}
 		if (node == '#document') {
-			var window = target.defaultView;
-			if (window) {
-				return '/' + window.name + '/' + node;
+			var the_win = element_window(target);
+			if (the_win) {
+				return '/' + the_win.name + '/' + node;
 			} else {
 				return 'root' + '/' + node;
 			}
@@ -296,7 +302,9 @@ function plugin_hotkeys() {
 			self.part_arkon.dialog("close");
 		} else {
 			self.log('work: open');
-			self.show_arkon();
+			self.show_arkon({
+				the_win : self.context_window(event),
+			});
 		}
 		return false; // #event stop/prevent
 	}
@@ -345,6 +353,13 @@ function plugin_hotkeys() {
 		return map;
 	}
 
+	// window of event origin and command execution
+	this.context_window = function context_window(event) {
+		var event_target = event.currentTarget;
+		var target_window = element_window(event_target);
+		return target_window.rcmail ? target_window : window;
+	}
+
 	// jquery data key
 	function mapping_key() {
 		return self.key('profile_mapping');
@@ -371,6 +386,7 @@ function plugin_hotkeys() {
 
 	// profile command invoker
 	this.profile_handler = function profile_handler(event, key) {
+		var the_win = self.context_window(event);
 		var target = event.currentTarget;
 		var profile_mapping = $(target).data(mapping_key());
 		var mapping_list = profile_mapping[key];
@@ -378,9 +394,9 @@ function plugin_hotkeys() {
 		var has_match = false; // on any mapping
 		$.each(mapping_list, function(_, mapping) {
 			var context = mapping.context;
-			if (self.match_context(context, event)) {
+			if (self.match_context(the_win, context, event)) {
 				has_match = true;
-				self.execute(mapping);
+				self.execute(the_win, mapping);
 			}
 		});
 		if (!has_match && self.env('enable_prevent')) {
@@ -474,8 +490,9 @@ function plugin_hotkeys() {
 	}
 
 	// verify current execution context
-	this.match_context = function match_context(name, event) {
+	this.match_context = function match_context(the_win, name, event) {
 
+		var rcmail = the_win.rcmail;
 		var task = rcmail.env.task;
 		var action = rcmail.env.action;
 
@@ -517,7 +534,8 @@ function plugin_hotkeys() {
 	}
 
 	// invoke command defined by mapping
-	this.execute = function execute(mapping) {
+	this.execute = function execute(the_win, mapping) {
+		var rcmail = the_win.rcmail;
 		var command = mapping.command;
 		self.log(command);
 		var auto_enable = self.env('command_auto_enable') || false;
@@ -529,7 +547,7 @@ function plugin_hotkeys() {
 		try {
 			var script = mapping.script;
 			if (script) {
-				self.evaluate(mapping);
+				self.evaluate(the_win, mapping);
 			} else {
 				rcmail.command(command);
 			}
@@ -799,21 +817,51 @@ function plugin_hotkeys() {
 		return self.env('plugin_icon_class');
 	}
 
-	// //
-
+	// rcmail.init()
 	self.initialize();
 
 }
 
 // script evaluator
-plugin_hotkeys.prototype.evaluate = function evaluate(mapping) {
+plugin_hotkeys.prototype.evaluate = function evaluate(the_win, mapping) {
 	var self = this;
-	var script = mapping.script;
-	var command = mapping.command;
-	self.log(script);
-	// TODO build eval sand box
-	// expose vars: $, rcmail, command
-	eval(script);
+
+	// evaluator builder
+	function sandbox_provide($this, vars, code) {
+		var args = []; // names of vars
+		var vals = []; // values of vars
+		for ( var name in vars) {
+			if (vars.hasOwnProperty(name)) {
+				args.push(name);
+				vals.push(vars[name]);
+			}
+		}
+		var declare = Array.prototype.concat.call($this, args, code);
+		var sandbox = new (Function.prototype.bind.apply(Function, declare));
+		var context = Array.prototype.concat.call($this, vals);
+		return Function.prototype.bind.apply(sandbox, context);
+	}
+
+	// 'this' of sandbox
+	var $this = Object.create(null);
+
+	// sandbox variables
+	var vars = {
+		$ : the_win.$,
+		top : the_win.top,
+		rcmail : the_win.rcmail,
+		command : mapping.command,
+	};
+
+	// sandbox program
+	var code = mapping.script;
+
+	self.log(code);
+
+	var sandbox_evaluate = sandbox_provide($this, vars, code);
+
+	sandbox_evaluate();
+
 }
 
 // dialog content
@@ -1082,8 +1130,13 @@ plugin_hotkeys.prototype.html_tabs = function(args) {
 }
 
 // main dialog
-plugin_hotkeys.prototype.show_arkon = function(args) {
+plugin_hotkeys.prototype.show_arkon = function show_arkon(args) {
 	var self = this;
+
+	var the_win = args && args.the_win ? args.the_win : window
+	var the_task = the_win.rcmail.env.task;
+	var the_action = the_win.rcmail.env.action;
+	var the_location = the_win.rcmail.env['framed'] ? 'frame' : 'top';
 
 	var profile_list = self.profile_list();
 	var filter_list = self.filter_list();
@@ -1096,6 +1149,12 @@ plugin_hotkeys.prototype.show_arkon = function(args) {
 	});
 
 	//
+
+	var context_part = $('<form>');
+	var context_text = //
+	the_location + ": '" + the_task + "'/'" + the_action + "'";
+	$('<label>').text(context_text).appendTo(context_part);
+	$('<p>').appendTo(context_part);
 
 	var profile_part = self.html_tabs({
 		tabs_list : profile_list,
@@ -1110,7 +1169,7 @@ plugin_hotkeys.prototype.show_arkon = function(args) {
 		// auto_sort : true,
 		field_list : field_list,
 	}).css({
-		height : '28em',
+		height : '24em',
 	});
 
 	var mapping_widget = mapping_part.data('widget');
@@ -1146,7 +1205,7 @@ plugin_hotkeys.prototype.show_arkon = function(args) {
 			remove();
 			break;
 		case 'invoke':
-			self.execute(mapping_widget.$choice());
+			self.execute(window, mapping_widget.$choice());
 			break;
 		default:
 			self.log('error: ' + id, true);
@@ -1201,8 +1260,12 @@ plugin_hotkeys.prototype.show_arkon = function(args) {
 		}).text(self.localize(name)).appendTo(content);
 	}
 
+	content_section('context');
+	content.append(context_part);
+
 	content_section('profile');
 	content.append(profile_part);
+
 	content_section('mapping');
 	content.append(filter_part);
 	content.append(mapping_part);
@@ -1633,7 +1696,7 @@ plugin_hotkeys.prototype.show_changer = function(args) {
 		id : 'invoke',
 		text : self.localize('invoke'),
 		click : function() {
-			self.execute(result());
+			self.execute(window, result());
 		}
 	}, {
 		id : 'close',

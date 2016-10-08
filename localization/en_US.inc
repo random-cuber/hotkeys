@@ -10,7 +10,7 @@ $labels['enable_logging'] = 'Enable plugin logging';
 $labels['enable_button'] = 'Enable toolbar button';
 $labels['enable_prevent'] = 'Prevent default browser keys';
 $labels['plugin_hotkey'] = 'Plugin access key';
-$labels['reset_to_default'] = 'Reset mappings to default';
+$labels['reset_to_default'] = 'Reset mapping to plugin default';
 
 $labels['button_text'] = 'Keys';
 $labels['button_title'] = 'Configure keyboard shortcuts';

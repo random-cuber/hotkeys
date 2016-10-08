@@ -11,43 +11,43 @@
     {
         "profile": "andrei.pozolotin",
         "command": "plugin.contextmenu_folder.folder_create",
-        "context": "mail_any",
+        "context": "mail_box",
         "comment": "mailbox: create sub folder from current folder",
-        "script": "",
+        "script": "top.rcmail.command(command);",
         "key": "f7",
         "source": "external"
     },
     {
         "profile": "andrei.pozolotin",
         "command": "plugin.contextmenu_folder.folder_delete",
-        "context": "mail_any",
+        "context": "mail_box",
         "comment": "mailbox: delete currently selected folder",
-        "script": "",
+        "script": "top.rcmail.command(command);",
         "key": "f8",
         "source": "external"
     },
     {
         "profile": "andrei.pozolotin",
         "command": "plugin.contextmenu_folder.folder_locate",
-        "context": "mail_any",
+        "context": "mail_box",
         "comment": "mailbox: select folder by quick search",
-        "script": "",
+        "script": "top.rcmail.command(command);",
         "key": "f3",
         "source": "external"
     },
     {
         "profile": "andrei.pozolotin",
         "command": "plugin.contextmenu_folder.folder_rename",
-        "context": "mail_any",
+        "context": "mail_box",
         "comment": "mailbox: rename currently selected",
-        "script": "",
+        "script": "top.rcmail.command(command);",
         "key": "f2",
         "source": "external"
     },
     {
         "profile": "andrei.pozolotin",
         "command": "plugin.contextmenu.readfolder",
-        "context": "mail_any",
+        "context": "mail_box",
         "comment": "mailbox: mark as read selected folder",
         "script": "",
         "key": "---",
@@ -65,7 +65,7 @@
     {
         "profile": "andrei.pozolotin",
         "command": "plugin.contextmenu.expandall",
-        "context": "mail_any",
+        "context": "mail_box",
         "comment": "mailbox: expand all",
         "script": "",
         "key": "f10",
@@ -74,7 +74,7 @@
     {
         "profile": "andrei.pozolotin",
         "command": "plugin.contextmenu.collapseall",
-        "context": "mail_any",
+        "context": "mail_box",
         "comment": "mailbox: collapse all",
         "script": "",
         "key": "alt+f10",
@@ -87,15 +87,6 @@
         "comment": "reload client from the server",
         "script": "document.location.reload(true);",
         "key": "shift+f1",
-        "source": "custom"
-    },
-    {
-        "profile": "andrei.pozolotin",
-        "command": "#quicksearchbox",
-        "context": "mail_list",
-        "comment": "focus: enter search input",
-        "script": "$(command).focus().select();",
-        "key": "ctrl+f",
         "source": "custom"
     },
     {
@@ -146,72 +137,72 @@
     {
         "profile": "andrei.pozolotin",
         "command": "plugin.contextmenu_folder.show_all",
-        "context": "mail_any",
+        "context": "mail_box",
         "comment": "mailbox: show all",
-        "script": "",
+        "script": "top.rcmail.command(command);",
         "key": "alt+1",
         "source": "external"
     },
     {
         "profile": "andrei.pozolotin",
         "command": "plugin.contextmenu_folder.show_active",
-        "context": "mail_any",
+        "context": "mail_box",
         "comment": "mailbox: show active",
-        "script": "",
+        "script": "top.rcmail.command(command);",
         "key": "alt+2",
         "source": "external"
     },
     {
         "profile": "andrei.pozolotin",
         "command": "plugin.contextmenu_folder.show_favorite",
-        "context": "mail_any",
+        "context": "mail_box",
         "comment": "mailbox: show favorite",
-        "script": "",
+        "script": "top.rcmail.command(command);",
         "key": "alt+3",
         "source": "external"
     },
     {
         "profile": "andrei.pozolotin",
         "command": "plugin.contextmenu_folder.reset_selected",
-        "context": "mail_any",
+        "context": "mail_box",
         "comment": "mailbox: empty 'selected' collection",
-        "script": "",
+        "script": "top.rcmail.command(command);",
         "key": "alt+4",
         "source": "external"
     },
     {
         "profile": "andrei.pozolotin",
         "command": "plugin.contextmenu_folder.reset_transient",
-        "context": "mail_any",
+        "context": "mail_box",
         "comment": "mailbox: empty 'transient' collection",
-        "script": "",
+        "script": "top.rcmail.command(command);",
         "key": "alt+5",
         "source": "external"
     },
     {
         "profile": "andrei.pozolotin",
         "command": "plugin.contextmenu_folder.message_copy",
-        "context": "mail_any",
+        "context": "mail_box",
         "comment": "mesage: copy selected by quick search",
-        "script": "",
+        "script": "top.rcmail.command(command);",
         "key": "f5",
         "source": "external"
     },
     {
         "profile": "andrei.pozolotin",
         "command": "plugin.contextmenu_folder.message_move",
-        "context": "mail_any",
+        "context": "mail_box",
         "comment": "mesage: move selected by quick search",
-        "script": "",
+        "script": "top.rcmail.command(command);",
         "key": "f6",
         "source": "external"
     },
     {
         "profile": "andrei.pozolotin",
         "command": "plugin.contextmenu_folder.contact_folder_create",
-        "context": "mail_any",
+        "context": "mail_box",
         "comment": "mailbox: create mailbox from message headers",
-        "script": "",
+        "script": "top.rcmail.command(command);",
         "key": "f4",
         "source": "external"
     },
@@ -420,36 +411,36 @@
     {
         "profile": "andrei.pozolotin",
         "command": "plugin.contextmenu_folder.folder_select",
-        "context": "mail_any",
+        "context": "mail_box",
         "comment": "mailbox: append into 'selected' collection",
-        "script": "",
+        "script": "top.rcmail.command(command);",
         "key": "alt+6",
         "source": "external"
     },
     {
         "profile": "andrei.pozolotin",
         "command": "plugin.contextmenu_folder.folder_unselect",
-        "context": "mail_any",
+        "context": "mail_box",
         "comment": "mailbox: remove from 'selected' collection",
-        "script": "",
+        "script": "top.rcmail.command(command);",
         "key": "alt+7",
         "source": "external"
     },
     {
         "profile": "andrei.pozolotin",
         "command": "plugin.contextmenu_folder.folder_read_tree",
-        "context": "mail_any",
+        "context": "mail_box",
         "comment": "mailbox: mark read current and its descendants",
-        "script": "",
+        "script": "top.rcmail.command(command);",
         "key": "alt+f9",
         "source": "external"
     },
     {
         "profile": "andrei.pozolotin",
         "command": "plugin.contextmenu_folder.folder_read_this",
-        "context": "mail_any",
+        "context": "mail_box",
         "comment": "mailbox: mark read current folder",
-        "script": "",
+        "script": "top.rcmail.command(command);",
         "key": "f9",
         "source": "external"
     },
@@ -466,7 +457,7 @@
         "profile": "andrei.pozolotin",
         "command": "savedraft",
         "context": "mail_edit",
-        "comment": "compose: save draft",
+        "comment": "compose: save mail draft",
         "script": "",
         "key": "ctrl+s",
         "source": "internal"
@@ -502,7 +493,7 @@
         "profile": "andrei.pozolotin",
         "command": "send",
         "context": "mail_edit",
-        "comment": "compose: send mail",
+        "comment": "compose: send mail (no check)",
         "script": "rcmail.command('send', {});",
         "key": "ctrl+shift+s",
         "source": "internal"
@@ -560,5 +551,275 @@
         "script": "",
         "key": "ctrl+j",
         "source": "external"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "firstpage",
+        "context": "mail_list",
+        "comment": "message: navigate to first page",
+        "script": "",
+        "key": "ctrl+home",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "lastpage",
+        "context": "mail_list",
+        "comment": "message: navigate to last page",
+        "script": "",
+        "key": "ctrl+end",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "lastpage",
+        "context": "book_list",
+        "comment": "contact: navigate to last page",
+        "script": "",
+        "key": "ctrl+end",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "firstpage",
+        "context": "book_list",
+        "comment": "contact: navigate to first page",
+        "script": "",
+        "key": "ctrl+home",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "nextpage",
+        "context": "book_list",
+        "comment": "contact: navigate to following page",
+        "script": "",
+        "key": "pagedown",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "previouspage",
+        "context": "book_list",
+        "comment": "contact: navigate to previous page",
+        "script": "",
+        "key": "pageup",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "add",
+        "context": "book_list",
+        "comment": "contact: create",
+        "script": "",
+        "key": "alt+n",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "delete",
+        "context": "book_list",
+        "comment": "contact: delete contact from address book",
+        "script": "",
+        "key": "alt+d",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "edit",
+        "context": "book_list",
+        "comment": "contact: edit address book entry",
+        "script": "",
+        "key": "ctrl+i",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "show",
+        "context": "book_edit",
+        "comment": "contact: exit edit mode",
+        "script": "",
+        "key": "esc",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "edit",
+        "context": "book_view",
+        "comment": "contact: edit address book entry",
+        "script": "",
+        "key": "ctrl+i",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "save",
+        "context": "book_edit",
+        "comment": "contact: save book entry",
+        "script": "",
+        "key": "ctrl+s",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "settings",
+        "context": "any",
+        "comment": "task: switch to settings",
+        "script": "",
+        "key": "ctrl+shift+3",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "mail",
+        "context": "any",
+        "comment": "task: switch to mail",
+        "script": "",
+        "key": "ctrl+shift+1",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "addressbook",
+        "context": "any",
+        "comment": "task: switch to book",
+        "script": "",
+        "key": "ctrl+shift+2",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "#contacttabs-1",
+        "context": "book_edit",
+        "comment": "switch: edit tab #1",
+        "script": "$('#contacttabs').tabs('option', 'active', 0);",
+        "key": "alt+1",
+        "source": "custom"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "#contacttabs-2",
+        "context": "book_edit",
+        "comment": "switch: edit tab #2",
+        "script": "$('#contacttabs').tabs('option', 'active', 1);",
+        "key": "alt+2",
+        "source": "custom"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "#contacttabs-3",
+        "context": "book_edit",
+        "comment": "switch: edit tab #3",
+        "script": "$('#contacttabs').tabs('option', 'active', 2);",
+        "key": "alt+3",
+        "source": "custom"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "#contacts-table",
+        "context": "book_any",
+        "comment": "focus: select address book contact list",
+        "script": "top.$(command).focus().select();",
+        "key": "ctrl+l",
+        "source": "custom"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "#quicksearchbox",
+        "context": "book_any",
+        "comment": "focus: enter search input",
+        "script": "top.$(command).focus().select();",
+        "key": "ctrl+f",
+        "source": "custom"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "#quicksearchbox",
+        "context": "mail_list",
+        "comment": "focus: enter search input",
+        "script": "top.$(command).focus().select();",
+        "key": "ctrl+f",
+        "source": "custom"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "#quicksearchbox",
+        "context": "mail_view",
+        "comment": "focus: enter search input",
+        "script": "top.$(command).focus().select();",
+        "key": "ctrl+f",
+        "source": "custom"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "#contactsearchbox",
+        "context": "mail_edit",
+        "comment": "focus: select contact search box",
+        "script": "top.$(command).focus().select();",
+        "key": "ctrl+f",
+        "source": "custom"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "#_from",
+        "context": "mail_edit",
+        "comment": "focus: select 'from'",
+        "script": "top.$(command).focus();",
+        "key": "alt+1",
+        "source": "custom"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "#_to",
+        "context": "mail_edit",
+        "comment": "focus: select 'to'",
+        "script": "top.$(command).focus();",
+        "key": "alt+2",
+        "source": "custom"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "#composebody",
+        "context": "mail_edit",
+        "comment": "focus: select 'edit area' (text)",
+        "script": "top.$(command).focus();",
+        "key": "alt+4",
+        "source": "custom"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "#composebody_ifr",
+        "context": "mail_edit",
+        "comment": "focus: select 'edit area' (html)",
+        "script": "top.$(command).focus();",
+        "key": "alt+4",
+        "source": "custom"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "nextmessage",
+        "context": "mail_view",
+        "comment": "message: open following message",
+        "script": "",
+        "key": "ctrl+right",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "previousmessage",
+        "context": "mail_view",
+        "comment": "message: open previous message",
+        "script": "",
+        "key": "ctrl+left",
+        "source": "internal"
+    },
+    {
+        "profile": "andrei.pozolotin",
+        "command": "#compose-subject",
+        "context": "mail_edit",
+        "comment": "focus: select 'subject'",
+        "script": "top.$(command).focus();",
+        "key": "alt+3",
+        "source": "custom"
     }
 ]

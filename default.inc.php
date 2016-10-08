@@ -101,58 +101,86 @@ $config['plugin.hotkeys.profile_list'] = array(
 // empty/missing array() in filter matches any
 $config['plugin.hotkeys.context_mapa'] = array(
 
-        'any' => array( // catch-all context
-                'task_list' => array(),  // required tasks
-                'action_list' => array(), // required actions
-                'focused_mapa' => array(), // node id => present/missing in focus
-                'target_name_mapa' => array(), // node name rx => present/missing in event target
+        'any' => array(
+                'help' => 'catch-all context',
+                'task_list' => array(),  // required tasks in rcmail.env.task
+                'action_list' => array(), // required actions in rcmail.env.action
+                'focused_mapa' => array(), // node id => present/missing in window.focus
+                'target_name_mapa' => array(), // node name rx => present/missing in event.target
         ),
 
         'mail_any' => array(
+                'help' => 'global mail access',
                 'task_list' => array('mail', ),
         ) ,
+        
+        'mail_box' => array(
+                'help' => 'visible mailbox list',
+                'task_list' => array('mail', ),
+                'action_list' => array('', 'list', 'show', 'preview', ),
+        ) ,
+        
         'mail_list' => array(
+                'help' => 'visible message list',
                 'task_list' => array('mail', ),
                 'action_list' => array('', 'list', ),
                 'target_name_mapa' => array( 'input|select' => false,  ),
         ) ,
+        
         'mail_edit' => array(
+                'help' => 'mail compose editor',
                 'task_list' => array('mail', ),
                 'action_list' => array('compose', ),
-                // 'target_name_mapa' => array( 'textarea' => false,  ),
         ),
+        
         'mail_view' => array(
+                'help' => 'visible mail body frame (no edit)',
                 'task_list' => array('mail', ),
                 'action_list' => array('show', 'preview', ),
         ),
 
         'book_any' => array(
+                'help' => 'global address book access',
                 'task_list' => array('addressbook', ),
                 'action_list' => array(),
         ),
-        'book_list' => array(
+        
+        'book_list' => array( // visible contact list
+                'help' => '',
                 'task_list' => array('addressbook', ),
                 'action_list' => array(''),
         ),
+        
         'book_edit' => array(
+                'help' => '',
                 'task_list' => array('addressbook', ),
                 'action_list' => array('edit'),
         ),
+        
         'book_view' => array(
+                'help' => '',
                 'task_list' => array('addressbook', ),
                 'action_list' => array('show', ),
         ),
         
-        'mailboxlist' => array(
+        'mailboxlist' => array( // mail folder list
+                'help' => '',
                 'focused_mapa' => array('mailboxlist' => true),
         ) ,
 
         'quicksearchbox' => array(
+                'help' => 'shared mail & book search',
                 'focused_mapa' => array('quicksearchbox' => true),
         ) ,
 
         'messagessearchfilter' => array(
+                'help' => 'mail filter selector',
                 'focused_mapa' => array('messagessearchfilter' => true),
+        ) ,
+        
+        'contacts-table' => array(
+                'help' => 'address book contact list',
+                'focused_mapa' => array('contacts-table' => true),
         ) ,
 
 );
@@ -167,15 +195,28 @@ $config['plugin.hotkeys.custom_command_list'] = array(
         '#', // a place for 'new'
         'noop', // idle command
         'test', // command testing
+        // mail list
         'reload', // reload page in browser
-        'edit:html', // switch editor to html
-        'edit:text', // switch editor to text
         'select:all', // global list selection
         'select:page', // limited page selection
         '#mailboxlist', // focus/blur mailbox list table
         '#messagelist', // focus/blur message list table
         '#quicksearchbox', // focus/blur type-in search input
         '#messagessearchfilter', // focus/blur message list filter
+        // mail compose
+        'edit:html', // switch editor to html
+        'edit:text', // switch editor to text
+        '#contactsearchbox', // focus/blur contact finder
+        '#_from', // focus/blur "from" input
+        '#_to', // focus/blur "to" input
+        '#compose-subject', // focus/blur "subject" input
+        '#composebody', // edit area, text mode
+        '#composebody_ifr', // edit area, html mode
+        // address book
+        '#contacts-table', // focus/blur book contact list
+        '#contacttabs-1', // switch to contact form tab
+        '#contacttabs-2', // switch to contact form tab
+        '#contacttabs-3', // switch to contact form tab
 );
 
 // known built-ins: see program/js/app.js rcube_webmail.command()
@@ -330,6 +371,7 @@ $config['plugin.hotkeys.settings_text_list'] = array(
 // disable these default browser actions
 $config['plugin.hotkeys.prevent_default_keys'] = array(
         'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9', 'f10',
+        'alt+1', 'alt+2', 'alt+3', 'alt+4', 'alt+5', 'alt+6', 'alt+7', 'alt+8', 'alt+9', 'alt+0',
         'ctrl+h', // history
         'ctrl+d', // bookmark
         'ctrl+e', // location
@@ -342,6 +384,7 @@ $config['plugin.hotkeys.prevent_default_keys'] = array(
         'ctrl+s', // save
         'ctrl+r', // reload
         'ctrl+u', // view html
+        'ctrl+o', // open file
 );
 
 // permitted alt/ctrl/shift prefix key combinations
