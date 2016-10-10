@@ -33,8 +33,8 @@ $labels['tooltip_command'] = 'Command name for direct invocation';
 $labels['tooltip_context'] = 'Select context filter for command application';
 $labels['tooltip_key_enter'] = 'Enter shortcut name, i.e.: ctrl+f3';
 $labels['tooltip_key_click'] = 'Click here, then press desired hot key';
-$labels['tooltip_script'] = 'Optional javascript to override command-by-name';
-$labels['tooltip_comment'] = 'Briefley describe operation performed by the command';
+$labels['tooltip_script'] = 'Optional javascript to override default command invocation';
+$labels['tooltip_comment'] = 'Briefley describe operation performed by this command mapping';
 
 $labels['all'] = 'all';
 $labels['active'] = 'active';
@@ -69,6 +69,8 @@ $labels['success'] = 'Success';
 $labels['failure'] = 'Failure';
 
 $labels['profile_list'] = 'Profile list';
+
+$labels['feature_choice'] = 'Enable plugin features';
 
 $labels['custom_command_list'] = 'Custom command list';
 $labels['internal_command_list'] = 'Internal command list';

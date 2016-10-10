@@ -151,7 +151,6 @@ class hotkeys extends rcube_plugin {
            'activate_plugin', 
            'enable_logging',
            'enable_prevent',
-           'enable_event_order',
            'plugin_hotkey',
            'plugin_icon_class',
            'export_prefix',
@@ -166,8 +165,8 @@ class hotkeys extends rcube_plugin {
            'supported_meta_keys',
            'supported_base_keys',
            'options_filter_input',
-           'command_auto_enable',
            'prevent_default_keys',
+           'feature_choice',
        );
        foreach($name_list as $name) {
            $this->set_env($name);
@@ -384,7 +383,10 @@ class hotkeys extends rcube_plugin {
     }
 
     // settings multi select
-    function build_select(& $entry, $name, $option_list) {
+    function build_select(& $entry, $name, $option_list = null) {
+        if(! $option_list) { // list name convention
+            $option_list = $this->config_get($name . '.' . 'list');
+        }
         $key = $this->key($name);
         $select = new html_select(array(
              'id' => $key, 'name' => $key . '[]', // use array 
@@ -432,7 +434,7 @@ class hotkeys extends rcube_plugin {
                 $this->build_checkbox($entry, $name);
             }
             foreach($this->settings_select_list() as $name) {
-                $this->build_select($entry, $name, self::$filter_type_list);
+                $this->build_select($entry, $name);
             }
             foreach($this->settings_area_list() as $name) {
                 $this->build_textarea($entry, $name);

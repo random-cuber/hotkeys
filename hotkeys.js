@@ -70,7 +70,7 @@ function plugin_hotkeys() {
 
 	// place plugin key handlers first FIXME
 	this.event_order = function event_order(the_keys) {
-		if (!self.env('enable_event_order')) {
+		if (!self.has_feature('change_event_order')) {
 			return;
 		}
 		var func = $._data; // function
@@ -130,6 +130,11 @@ function plugin_hotkeys() {
 	//
 	this.is_plugin_active = function is_plugin_active() {
 		return self.env('activate_plugin');
+	}
+
+	// client ui behaviour
+	this.has_feature = function has_feature(name) {
+		return (self.env('feature_choice') || []).indexOf(name) >= 0;
 	}
 
 	// plugin on load setup
@@ -386,6 +391,13 @@ function plugin_hotkeys() {
 
 	// profile command invoker
 	this.profile_handler = function profile_handler(event, key) {
+		if (rcmail.busy && self.has_feature('queue_busy_keys')) {
+			self.log('busy: ' + rcmail.busy);
+			window.setTimeout(function() {
+				self.profile_handler(event, key);
+			}, 100);
+			return false; // #event stop/prevent
+		}
 		var the_win = self.context_window(event);
 		var target = event.currentTarget;
 		var profile_mapping = $(target).data(mapping_key());
@@ -538,7 +550,7 @@ function plugin_hotkeys() {
 		var rcmail = the_win.rcmail;
 		var command = mapping.command;
 		self.log(command);
-		var auto_enable = self.env('command_auto_enable') || false;
+		var auto_enable = self.has_feature('command_auto_enable') || false;
 		var was_enabled = rcmail.command_enabled(command) || false;
 		var manage_enabled = auto_enable && !was_enabled;
 		if (manage_enabled) {
@@ -1492,7 +1504,11 @@ plugin_hotkeys.prototype.show_changer = function(args) {
 	content.append(table);
 
 	function tooltip(id) {
-		return self.localize('tooltip_' + id);
+		if (self.has_feature('show_changer_tooltips')) {
+			return self.localize('tooltip_' + id);
+		} else {
+			return null;
+		}
 	}
 
 	function label(id) {
@@ -1555,9 +1571,10 @@ plugin_hotkeys.prototype.show_changer = function(args) {
 
 		var btn = button(id + '_click').css({
 			width : '15em',
-		}).text('').attr({
+		}).attr({
 			class : self.plugin_icon_class(),
-		});
+		}).text('*').button();
+		btn.find('span').hide();
 
 		btn.click(function btn_click(event) {
 			self.log('...');
@@ -1622,10 +1639,10 @@ plugin_hotkeys.prototype.show_changer = function(args) {
 	var editor = {
 		profile : chooser('profile', profile_list, false).change(render).val(
 				self.valid_val(profile_list, mapping.profile)),
-		command : chooser('command', command_list, false).change(render).val(
-				self.valid_val(command_list, mapping.command)),
 		context : chooser('context', context_mapa, true).change(render).val(
 				self.valid_key(context_mapa, mapping.context)),
+		command : chooser('command', command_list, false).change(render).val(
+				self.valid_val(command_list, mapping.command)),
 		comment : entry('comment').val(mapping.comment).keypress(keypress),
 		script : entry('script').val(mapping.script).keypress(keypress),
 		key : keyspypad('key').val(mapping.key).keypress(keypress),
@@ -1634,17 +1651,16 @@ plugin_hotkeys.prototype.show_changer = function(args) {
 	function result() {
 		return {
 			profile : editor.profile.val(),
-			command : editor.command.val(),
 			context : editor.context.val(),
+			command : editor.command.val(),
 			comment : editor.comment.val(),
 			script : editor.script.val(),
 			key : editor.key.val(),
 		};
 	}
 
-	var delay = 1000;
+	var delay = self.env('feature_tooltip_delay') || 1000;
 	table.tooltip({
-		track : false,
 		show : {
 			delay : delay,
 			effect : 'slideDown',
@@ -1655,8 +1671,8 @@ plugin_hotkeys.prototype.show_changer = function(args) {
 		// },
 		open : function(event, ui) {
 			window.setTimeout(function() {
-				$(ui.tooltip).hide('explode');
-			}, delay * 2);
+				$(ui.tooltip).hide();
+			}, delay * 3);
 		},
 	});
 
@@ -1713,6 +1729,7 @@ plugin_hotkeys.prototype.show_changer = function(args) {
 			of : window,
 		},
 		open : function open(event, ui) {
+			editor.comment.focus();
 			self.dialog_icon($(this).parent(), 'hotkeys-icon-pencil');
 			self.has_part_changer = true;
 			render();

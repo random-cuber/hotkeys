@@ -201,7 +201,7 @@
         "profile": "andrei.pozolotin",
         "command": "plugin.contextmenu_folder.contact_folder_create",
         "context": "mail_box",
-        "comment": "mailbox: create mailbox from message headers",
+        "comment": "mailbox: create folder from message headers",
         "script": "top.rcmail.command(command);",
         "key": "f4",
         "source": "external"
@@ -689,7 +689,7 @@
     },
     {
         "profile": "andrei.pozolotin",
-        "command": "#contacttabs-1",
+        "command": "#contacttabs:1",
         "context": "book_edit",
         "comment": "switch: edit tab #1",
         "script": "$('#contacttabs').tabs('option', 'active', 0);",
@@ -698,7 +698,7 @@
     },
     {
         "profile": "andrei.pozolotin",
-        "command": "#contacttabs-2",
+        "command": "#contacttabs:2",
         "context": "book_edit",
         "comment": "switch: edit tab #2",
         "script": "$('#contacttabs').tabs('option', 'active', 1);",
@@ -707,7 +707,7 @@
     },
     {
         "profile": "andrei.pozolotin",
-        "command": "#contacttabs-3",
+        "command": "#contacttabs:3",
         "context": "book_edit",
         "comment": "switch: edit tab #3",
         "script": "$('#contacttabs').tabs('option', 'active', 2);",

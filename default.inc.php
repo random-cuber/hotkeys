@@ -17,12 +17,6 @@ $config['plugin.hotkeys.enable_button'] = true;
 // prevent default browser keys
 $config['plugin.hotkeys.enable_prevent'] = true;
 
-// manage command enabelment around invocation
-$config['plugin.hotkeys.command_auto_enable'] = true;
-
-// place plugin key handlers first
-$config['plugin.hotkeys.enable_event_order'] = false; // FIXME
-
 // remove invalid mapping entries
 $config['plugin.hotkeys.enable_mapping_cleanup'] = true;
 
@@ -32,12 +26,32 @@ $config['plugin.hotkeys.plugin_hotkey'] = 'f1'; // lower case
 // global plugin icon, choose from assets/fontello
 $config['plugin.hotkeys.plugin_icon_class'] = 'hotkeys-icon-keyboard-black';
 
+// process file import on the client
+$config['plugin.hotkeys.import_local'] = true;
+
 // file export naming: 'prefix-profile.extension'
 $config['plugin.hotkeys.export_prefix'] = 'hotkeys';
 $config['plugin.hotkeys.export_extension'] = 'json';
 
-// process file import on the client
-$config['plugin.hotkeys.import_local'] = true;
+// enabled client ui behaviour
+$config['plugin.hotkeys.feature_choice'] = array(
+        // 'change_event_order',
+        'command_auto_enable',
+        'queue_busy_keys',
+        // 'show_arkon_tooltips',
+        'show_changer_tooltips',
+);
+// available select/options
+$config['plugin.hotkeys.feature_choice.list'] = array(
+        'change_event_order', // place plugin key handlers first FIXME
+        'command_auto_enable', // manage command enabelment around invocation
+        'queue_busy_keys', // process keys when core rcmail app is not busy
+        // 'show_arkon_tooltips', // TODO
+        'show_changer_tooltips', // display tooltips in the mapping editor dialog
+);
+
+// tooltip animation delay
+$config['plugin.hotkeys.feature_tooltip_delay'] = 1500; // millis
 
 // persisted command/hotkey mapping table
 $config['plugin.hotkeys.mapping_list'] = array();
@@ -214,9 +228,9 @@ $config['plugin.hotkeys.custom_command_list'] = array(
         '#composebody_ifr', // edit area, html mode
         // address book
         '#contacts-table', // focus/blur book contact list
-        '#contacttabs-1', // switch to contact form tab
-        '#contacttabs-2', // switch to contact form tab
-        '#contacttabs-3', // switch to contact form tab
+        '#contacttabs:1', // switch to contact form tab
+        '#contacttabs:2', // switch to contact form tab
+        '#contacttabs:3', // switch to contact form tab
 );
 
 // known built-ins: see program/js/app.js rcube_webmail.command()
@@ -338,6 +352,7 @@ $config['plugin.hotkeys.settings_checkbox_list'] = array(
 
 // expose these settings in user ui
 $config['plugin.hotkeys.settings_select_list'] = array(
+        'feature_choice',
 );
 
 // expose these settings in user ui
@@ -354,11 +369,12 @@ $config['plugin.hotkeys.settings_area_list'] = array(
 $config['plugin.hotkeys.settings_text_list'] = array(
         'plugin_hotkey',
         // 'plugin_icon_class',
+        // 'feature_tooltip_delay', 
 );
 
 ///////////
 
-// can not prevent/re-map:
+// can not use some keys:
 
 // reserved by chromium: [Shift]Ctrl(Q|N|W|T|↹|{number}),
 // https://support.google.com/chrome/answer/157179?hl=en
