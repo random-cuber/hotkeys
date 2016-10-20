@@ -56,6 +56,14 @@ Navigate to:
 Dialog entries:
 * `TODO` : TODO
 
+Translation
+-----------
+
+Contribute to [translation via transifex][translation].
+
+
 [roundcube_arch]: https://wiki.archlinux.org/index.php/Roundcube
 [hotkeys_link]: http://plugins.roundcube.net/packages/random-cuber/hotkeys
 [plugin_dialog_main]:  https://raw.githubusercontent.com/random-cuber/hotkeys/master/build/plugin_dialog_main.png
+
+[translation]: https://www.transifex.com/random-cuber/hotkeys/
