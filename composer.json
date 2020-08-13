@@ -3,7 +3,7 @@
 	"description": "Functional keyboard shortcuts",
 	"keywords": ["keyboard", "shortcut", "hotkey", "settings", "share", "import", "export"],
 	"homepage": "https://github.com/random-cuber/hotkeys",
-	"license": "Apache",
+	"license": "Apache-2.0",
 	"type": "roundcube-plugin",
 	"version": "1.2.24",
 	"authors": [{
